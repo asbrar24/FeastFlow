@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FeastFlow - Admin Dashboard</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Forum&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/admin.css">
+</head>
+
+<body>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <div class="admin-wrapper">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <a href="/" class="logo">
+          <img src="./assets/images/logo.svg" width="140" height="44" alt="FeastFlow Logo">
+        </a>
+        <span class="badge">Admin</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="reservations">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>Reservations</span>
+        </button>
+        <button class="nav-item" data-tab="menu">
+          <ion-icon name="restaurant-outline"></ion-icon>
+          <span>Menu Manager</span>
+        </button>
+        <button class="nav-item" data-tab="contacts">
+          <ion-icon name="mail-unread-outline"></ion-icon>
+          <span>Messages</span>
+        </button>
+        <button class="nav-item" data-tab="newsletter">
+          <ion-icon name="people-outline"></ion-icon>
+          <span>Subscribers</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="index.html" class="back-link">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          <span>Back to Site</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <!-- Top Header -->
+      <header class="admin-header">
+        <h1 class="headline-1" id="tab-title">Reservations</h1>
+        <div class="admin-profile">
+          <img src="./assets/images/testi-avatar.jpg" width="40" height="40" alt="Admin Avatar" class="avatar">
+          <span class="username">Manager</span>
+        </div>
+      </header>
+
+      <!-- Content Views -->
+      <div class="admin-content">
+
+        <!-- Tab: Reservations -->
+        <section class="tab-view active" id="view-reservations">
+          <div class="view-header">
+            <div class="search-wrapper">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Search reservations..." id="search-reservations" class="search-input">
+            </div>
+          </div>
+
+          <div class="table-container glass-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Contact</th>
+                  <th>Guests</th>
+                  <th>Date & Time</th>
+                  <th>Message</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-reservations-body">
+                <tr>
+                  <td colspan="6" class="text-center">Loading reservations...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab: Menu Manager -->
+        <section class="tab-view" id="view-menu">
+          <div class="view-header">
+            <div class="search-wrapper">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Search menu..." id="search-menu" class="search-input">
+            </div>
+            <button class="btn btn-secondary add-btn" id="btn-add-menu">
+              <span class="text text-1">+ Add Item</span>
+              <span class="text text-2" aria-hidden="true">+ Add Item</span>
+            </button>
+          </div>
+
+          <div class="table-container glass-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Badge</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-menu-body">
+                <tr>
+                  <td colspan="7" class="text-center">Loading menu items...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab: Contacts / Messages -->
+        <section class="tab-view" id="view-contacts">
+          <div class="view-header">
+            <div class="search-wrapper">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Search messages..." id="search-contacts" class="search-input">
+            </div>
+          </div>
+
+          <div class="table-container glass-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Sender</th>
+                  <th>Email</th>
+                  <th>Subject</th>
+                  <th>Message</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-contacts-body">
+                <tr>
+                  <td colspan="6" class="text-center">Loading messages...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Tab: Newsletter Subscribers -->
+        <section class="tab-view" id="view-newsletter">
+          <div class="view-header">
+            <div class="search-wrapper">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Search subscribers..." id="search-newsletter" class="search-input">
+            </div>
+          </div>
+
+          <div class="table-container glass-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Email Address</th>
+                  <th>Subscribed Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-newsletter-body">
+                <tr>
+                  <td colspan="3" class="text-center">Loading subscribers...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Menu Item Modal (Add / Edit) -->
+  <div class="modal" id="menu-modal">
+    <div class="modal-content glass-card">
+      <header class="modal-header">
+        <h2 class="title-3" id="modal-title">Add Menu Item</h2>
+        <button class="modal-close" id="modal-close">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </header>
+      <form id="menu-form" class="modal-body">
+        <input type="hidden" id="menu-item-id">
+        <div class="form-group">
+          <label for="menu-name">Item Name*</label>
+          <input type="text" id="menu-name" class="input-field" placeholder="Greek Salad" required>
+        </div>
+        <div class="form-group">
+          <label for="menu-category">Category*</label>
+          <select id="menu-category" class="input-field" required>
+            <option value="breakfast">Breakfast</option>
+            <option value="appetizers">Appetizers</option>
+            <option value="main-course">Main Course</option>
+            <option value="seafood">Seafood</option>
+            <option value="drinks">Drinks</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="menu-price">Price ($)*</label>
+          <input type="number" id="menu-price" step="0.01" class="input-field" placeholder="19.99" required>
+        </div>
+        <div class="form-group">
+          <label for="menu-badge">Badge (Optional)</label>
+          <input type="text" id="menu-badge" class="input-field" placeholder="New, Seasonal, Chef Special">
+        </div>
+        <div class="form-group">
+          <label for="menu-image">Image URL</label>
+          <input type="text" id="menu-image" class="input-field" placeholder="./assets/images/menu-1.png">
+        </div>
+        <div class="form-group">
+          <label for="menu-description">Description</label>
+          <textarea id="menu-description" class="input-field" placeholder="Brief description of the dish..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-secondary modal-submit-btn">
+          <span class="text text-1" id="modal-submit-text">Save Item</span>
+          <span class="text text-2" aria-hidden="true" id="modal-submit-text-2">Save Item</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ionicons -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  
+  <!-- Custom JS -->
+  <script src="./assets/js/admin.js"></script>
+</body>
+
+</html>

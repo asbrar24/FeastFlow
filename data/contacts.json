@@ -1,0 +1,11 @@
+[
+  {
+    "id": "efaea793-3064-450c-9b70-07ddc874fdce",
+    "name": "Alice Smith",
+    "email": "alice@example.com",
+    "subject": "Private Party Inquiry",
+    "message": "Do you hold private dinner events for 20 people?",
+    "createdAt": "2026-05-21T18:03:26.977Z",
+    "read": false
+  }
+]

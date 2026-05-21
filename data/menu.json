@@ -1,0 +1,56 @@
+[
+  {
+    "id": "menu-001",
+    "name": "Greek Salad",
+    "description": "Tomatoes, green bell pepper, sliced cucumber onion, olives, and feta cheese.",
+    "price": 25.5,
+    "image": "./assets/images/menu-1.png",
+    "category": "appetizers",
+    "badge": "Seasonal"
+  },
+  {
+    "id": "menu-002",
+    "name": "Lasagne",
+    "description": "Vegetables, cheeses, ground meats, tomato sauce, seasonings and spices.",
+    "price": 40,
+    "image": "./assets/images/menu-2.png",
+    "category": "main-course",
+    "badge": null
+  },
+  {
+    "id": "menu-003",
+    "name": "Butternut Pumpkin",
+    "description": "Roasted butternut pumpkin with herbs, garlic butter, and a hint of nutmeg.",
+    "price": 10,
+    "image": "./assets/images/menu-3.png",
+    "category": "appetizers",
+    "badge": null
+  },
+  {
+    "id": "menu-004",
+    "name": "Tokusen Wagyu",
+    "description": "Premium wagyu beef, seared to perfection with truffle butter and seasonal vegetables.",
+    "price": 39,
+    "image": "./assets/images/menu-4.png",
+    "category": "main-course",
+    "badge": "New"
+  },
+  {
+    "id": "menu-005",
+    "name": "Olivas Rellenas",
+    "description": "Avocados with crab meat, red onion, crab salad stuffed red bell pepper and green bell pepper.",
+    "price": 25,
+    "image": "./assets/images/menu-5.png",
+    "category": "appetizers",
+    "badge": null
+  },
+  {
+    "id": "menu-006",
+    "name": "Opu Fish",
+    "description": "Fresh catch of the day, pan-seared with lemon caper sauce and garden herbs.",
+    "price": 49,
+    "image": "./assets/images/menu-6.png",
+    "category": "seafood",
+    "badge": null
+  }
+]
