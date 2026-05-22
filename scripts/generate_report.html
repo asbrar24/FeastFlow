@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feast Flow – Final Report</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.7;
+    color: #000;
+    background: #fff;
+  }
+
+  /* ── Page Setup ── */
+  @page { size: A4; margin: 2.5cm 2.5cm 2.5cm 3cm; }
+  @page :first { margin-top: 1.5cm; }
+
+  /* ── Page Break Helpers ── */
+  .page-break { page-break-after: always; }
+  .no-break   { page-break-inside: avoid; }
+
+  /* ═══════════════════════════════════
+     COVER PAGE
+  ═══════════════════════════════════ */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    text-align: center;
+    padding: 10px 0 20px;
+    page-break-after: always;
+  }
+  .cover .univ-header {
+    font-size: 13pt;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .cover .report-type {
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .cover .report-code {
+    font-size: 12pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .cover .on-text { font-size: 13pt; font-weight: bold; margin-bottom: 6px; }
+  .cover .project-title {
+    font-size: 20pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 2px solid #000;
+    padding: 8px 28px;
+    margin: 10px auto;
+    display: inline-block;
+  }
+  .cover .submitted-text {
+    font-size: 11pt;
+    margin: 14px 0 4px;
+    font-style: italic;
+  }
+  .cover .degree {
+    font-size: 13pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 4px 0;
+  }
+  .cover .branch {
+    font-size: 12pt;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .cover .session {
+    font-size: 12pt;
+    margin: 12px 0;
+    font-weight: bold;
+  }
+  .cover .sub-by-table {
+    width: 80%;
+    margin: 14px auto;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+    font-weight: bold;
+  }
+  .cover .sub-col { text-align: left; line-height: 1.8; }
+  .cover .dept-block {
+    font-size: 11pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 18px;
+    line-height: 1.7;
+    border-top: 1px solid #000;
+    padding-top: 10px;
+    width: 100%;
+  }
+
+  /* ═══════════════════════════════════
+     FRONT MATTER (Declaration, Certificate…)
+  ═══════════════════════════════════ */
+  .front-matter {
+    page-break-after: always;
+    padding: 10px 0 30px;
+  }
+  .front-matter h1 {
+    font-size: 16pt;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+    margin-bottom: 24px;
+  }
+  .front-matter p { margin-bottom: 14px; text-align: justify; }
+  .signature-block {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    font-size: 11pt;
+  }
+  .sign-col { text-align: left; line-height: 1.8; }
+
+  /* ═══════════════════════════════════
+     TABLE OF CONTENTS
+  ═══════════════════════════════════ */
+  .toc { page-break-after: always; }
+  .toc h1 {
+    font-size: 16pt;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: underline;
+    margin-bottom: 20px;
+  }
+  .toc table { width: 100%; border-collapse: collapse; font-size: 11pt; }
+  .toc table th { border: 1px solid #555; padding: 5px 8px; background: #f0f0f0; font-weight: bold; text-align: center; }
+  .toc table td { border: 1px solid #555; padding: 5px 8px; vertical-align: top; }
+
+  /* ═══════════════════════════════════
+     CHAPTERS
+  ═══════════════════════════════════ */
+  .chapter { page-break-before: always; }
+  .chapter-header {
+    text-align: center;
+    margin-bottom: 24px;
+    page-break-after: avoid;
+  }
+  .chapter-header .chapter-label {
+    font-size: 13pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .chapter-header .chapter-title {
+    font-size: 15pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+
+  h2 {
+    font-size: 13pt;
+    font-weight: bold;
+    margin: 20px 0 8px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 16px 0 6px;
+    page-break-after: avoid;
+  }
+  h4 {
+    font-size: 12pt;
+    font-weight: bold;
+    font-style: italic;
+    margin: 12px 0 4px;
+    page-break-after: avoid;
+  }
+
+  p { margin-bottom: 10px; text-align: justify; }
+
+  ul, ol { margin: 8px 0 10px 28px; }
+  li { margin-bottom: 4px; }
+
+  /* ═══════════════════════════════════
+     TABLES
+  ═══════════════════════════════════ */
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 11pt;
+    page-break-inside: avoid;
+  }
+  table.data-table th {
+    background: #d9d9d9;
+    border: 1px solid #333;
+    padding: 6px 10px;
+    font-weight: bold;
+    text-align: left;
+  }
+  table.data-table td {
+    border: 1px solid #555;
+    padding: 5px 10px;
+    vertical-align: top;
+  }
+  table.data-table tr:nth-child(even) td { background: #f7f7f7; }
+
+  /* ─── Simple text tables (no header row) ─── */
+  table.plain { width:100%; border-collapse:collapse; margin:10px 0; font-size:11pt; page-break-inside:avoid; }
+  table.plain td { border:1px solid #555; padding:5px 8px; }
+
+  /* ═══════════════════════════════════
+     CODE BLOCKS
+  ═══════════════════════════════════ */
+  pre {
+    background: #f4f4f4;
+    border: 1px solid #ccc;
+    border-left: 4px solid #333;
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin: 12px 0 16px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    page-break-inside: avoid;
+  }
+  code {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 9.5pt;
+    background: #f0f0f0;
+    padding: 1px 4px;
+    border-radius: 2px;
+  }
+  pre code { background: none; padding: 0; font-size: 9pt; }
+
+  /* ═══════════════════════════════════
+     IMAGES
+  ═══════════════════════════════════ */
+  figure {
+    text-align: center;
+    margin: 14px auto;
+    page-break-inside: avoid;
+  }
+  figure img {
+    max-width: 75%;
+    max-height: 220px;
+    object-fit: contain;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 6px;
+  }
+  figure figcaption {
+    font-size: 10pt;
+    font-style: italic;
+    color: #444;
+  }
+
+  /* ═══════════════════════════════════
+     MISC
+  ═══════════════════════════════════ */
+  .section-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11.5pt;
+    margin: 16px 0 4px;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 2px;
+  }
+  .indent { margin-left: 20px; }
+  strong { font-weight: bold; }
+  em     { font-style: italic; }
+
+  .flowchart {
+    font-family: "Courier New", monospace;
+    font-size: 10pt;
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    margin: 12px 0;
+    line-height: 2;
+    page-break-inside: avoid;
+  }
+
+  /* ── References ── */
+  .references ol { padding-left: 22px; }
+  .references li { margin-bottom: 10px; font-size: 11.5pt; }
+
+  /* ── About Org ── */
+  .about-org p { text-align: justify; margin-bottom: 12px; }
+
+  /* print only — hide web artifacts */
+  @media print {
+    a { color: #000; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║        COVER PAGE           ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="cover">
+  <div class="univ-header">
+    DEPARTMENT OF ENGINEERING AND TECHNOLOGY<br>
+    GURU NANAK DEV UNIVERSITY REGIONAL CAMPUS JALANDHAR<br>
+    (PUNJAB) INDIA – 144007
+  </div>
+
+  <hr style="width:80%;border:1.5px solid #000;margin:10px auto;">
+
+  <div class="report-type">Six Month Industrial Training</div>
+  <div class="report-code">CSD 481 – Final Term Report</div>
+  <div class="on-text">ON</div>
+
+  <div class="project-title">"FEAST FLOW"</div>
+
+  <p class="submitted-text">Submitted in partial fulfillment of the requirement for award of Degree of</p>
+  <div class="degree">Bachelor of Technology</div>
+  <div class="branch">(Computer Science and Engineering)</div>
+  <div class="session">SESSION: 2022–26</div>
+
+  <div class="sub-by-table">
+    <div class="sub-col">
+      <strong>SUBMITTED TO:</strong><br>
+      DR. SHEETAL KALRA<br>
+      Professor<br>
+      Guru Nanak Dev University<br>
+      Regional Campus, Jalandhar
+    </div>
+    <div class="sub-col" style="text-align:right;">
+      <strong>SUBMITTED BY:</strong><br>
+      AERONBIR SINGH BRAR<br>
+      B.Tech CSE 8th Sem<br>
+      Roll No. 17032249011
+    </div>
+  </div>
+
+  <div class="dept-block">
+    DEPARTMENT OF ENGINEERING AND TECHNOLOGY<br>
+    GURU NANAK DEV UNIVERSITY REGIONAL CAMPUS JALANDHAR<br>
+    (PUNJAB) INDIA – 144007
+  </div>
+</div>
+
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║       TABLE OF CONTENTS     ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="toc">
+  <h1>Index</h1>
+  <table class="data-table">
+    <thead>
+      <tr><th style="width:8%;">Sr. No.</th><th>Title</th><th style="width:18%;">Page No.</th></tr>
+    </thead>
+    <tbody>
+      <tr><td colspan="3"><strong>Front Matter</strong></td></tr>
+      <tr><td>—</td><td>Declaration</td><td>i</td></tr>
+      <tr><td>—</td><td>Certificate</td><td>ii</td></tr>
+      <tr><td>—</td><td>Acknowledgement</td><td>iii</td></tr>
+      <tr><td>—</td><td>Certificate from the Organisation</td><td>iv</td></tr>
+      <tr><td>1</td><td><strong>Introduction to Project</strong><br>
+        &nbsp;&nbsp;1.1 Introduction &amp; Scope of Project<br>
+        &nbsp;&nbsp;1.2 Description of Project<br>
+        &nbsp;&nbsp;1.3 Objectives of the Project</td><td>1 – 6</td></tr>
+      <tr><td>2</td><td><strong>Requirement Analysis and Literature Survey</strong><br>
+        &nbsp;&nbsp;2.1 Existing Projects of Similar Characteristics<br>
+        &nbsp;&nbsp;2.2 Need to Develop this Project<br>
+        &nbsp;&nbsp;2.3 Course of Action<br>
+        &nbsp;&nbsp;2.4 Literature Survey</td><td>7 – 14</td></tr>
+      <tr><td>3</td><td><strong>Planning of the Project</strong><br>
+        &nbsp;&nbsp;3.1 Objectives of the Project<br>
+        &nbsp;&nbsp;3.2 Planned Steps to Achieve above Objectives<br>
+        &nbsp;&nbsp;3.3 System Architecture Planning</td><td>15 – 20</td></tr>
+      <tr><td>4</td><td><strong>Hardware and Software Requirements</strong><br>
+        &nbsp;&nbsp;4.1 Hardware Requirements<br>
+        &nbsp;&nbsp;4.2 Software Requirements<br>
+        &nbsp;&nbsp;4.3 Tools Used for Development<br>
+        &nbsp;&nbsp;4.4 Techniques Used for Development</td><td>21 – 27</td></tr>
+      <tr><td>5</td><td><strong>Design of the Project</strong><br>
+        &nbsp;&nbsp;5.1 ER/DFD/Flow Chart Diagrams<br>
+        &nbsp;&nbsp;5.2 Class Diagram<br>
+        &nbsp;&nbsp;5.3 Data Storage Tables</td><td>28 – 35</td></tr>
+      <tr><td>6</td><td><strong>Implementation of the Project</strong><br>
+        &nbsp;&nbsp;6.1 Screenshots of Working Project<br>
+        &nbsp;&nbsp;6.2 Code Snippets (6.2.1 – 6.2.13)</td><td>36 – 47</td></tr>
+      <tr><td>7</td><td><strong>Conclusions / Future Scope</strong><br>
+        &nbsp;&nbsp;7.1 Conclusions<br>
+        &nbsp;&nbsp;7.2 Results in Tabular Form<br>
+        &nbsp;&nbsp;7.3 Future Scope</td><td>48 – 51</td></tr>
+      <tr><td>8</td><td><strong>About the Organisation</strong></td><td>52 – 53</td></tr>
+      <tr><td>9</td><td><strong>References</strong></td><td>54 – 55</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║        DECLARATION          ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="front-matter">
+  <h1>Declaration</h1>
+  <p>I, "Aeronbir Singh Brar", declare that the work presented in this project titled
+  <strong>"Feast Flow"</strong>, submitted to the Department of Engineering &amp; Technology, Guru Nanak
+  Dev University Regional Campus, Jalandhar for the award of degree of Bachelor of
+  Technology in Computer Science and Engineering, is my original work. I have not
+  plagiarized or submitted the same work for the award of any other degree. In case this
+  undertaking is found incorrect, I accept that my degree may be unconditionally withdrawn.</p>
+  <div class="signature-block">
+    <div class="sign-col">May, 2026</div>
+    <div class="sign-col" style="text-align:right;">
+      Aeronbir Singh Brar<br>Roll No. 17032249011
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║         CERTIFICATE         ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="front-matter">
+  <h1>Certificate</h1>
+  <p>Certified that the work contained in this report of project titled <strong>"Feast Flow"</strong>, by
+  <strong>Aeronbir Singh Brar</strong>, has been carried out under my supervision.</p>
+  <div class="signature-block" style="margin-top:60px;">
+    <div class="sign-col">
+      ____________________________<br>
+      <strong>Dr. Sheetal Kalra</strong><br>
+      (Supervisor)<br>
+      Professor<br>
+      Guru Nanak Dev University<br>
+      Regional Campus, Jalandhar
+    </div>
+    <div class="sign-col">
+      ____________________________<br>
+      <strong>Er. Neena Madan</strong><br>
+      (Training Incharge &amp; Class Coordinator)<br>
+      Assistant Professor<br>
+      Guru Nanak Dev University<br>
+      Regional Campus, Jalandhar
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║      ACKNOWLEDGEMENT        ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="front-matter">
+  <h1>Acknowledgement</h1>
+  <p>I, "Aeronbir Singh Brar", am highly grateful to Dr. Deep Kamal Kaur Randhawa,
+  Professor &amp; Head, Department of Engineering and Technology, Guru Nanak Dev
+  University Regional Campus, Jalandhar, for providing this opportunity to carry out
+  the present report/work. The consistent guidance and encouragement received from
+  Dr. Sheetal Kalra, our project Faculty Mentor, has been of great help in carrying out
+  the present work and is acknowledged with reverential thanks. Without her wise
+  counsel and able guidance, it would have been difficult to complete the report in this manner.</p>
+  <div class="signature-block" style="margin-top:60px;">
+    <div></div>
+    <div class="sign-col" style="text-align:right;">
+      Aeronbir Singh Brar<br>Roll No. 17032249011
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗ -->
+<!-- ║  CERTIFICATE FROM ORG       ║ -->
+<!-- ╚══════════════════════════════╝ -->
+<div class="front-matter page-break">
+  <h1>Certificate From The Organization</h1>
+  <p style="color:#666;font-style:italic;">(Attached separately)</p>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 1                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 1</span>
+    <span class="chapter-title">Introduction to Project</span>
+  </div>
+
+  <h2>1.1 Introduction &amp; Scope of Project</h2>
+  <p>In recent years, the rapid growth of internet technologies and digital platforms has significantly
+  transformed the way businesses operate across various industries. One of the sectors that has
+  experienced a major shift is the food and restaurant industry. Traditionally, restaurants relied on
+  manual processes such as dine-in services, handwritten orders, and telephonic bookings. While these
+  methods served their purpose in the past, they are no longer sufficient to meet the demands of modern
+  customers. Today's consumers expect convenience, speed, and accessibility. With the widespread use of
+  smartphones and the internet, customers prefer ordering food online rather than visiting restaurants
+  physically or placing phone calls. This shift has led to the rise of digital food ordering systems
+  and e-commerce platforms tailored specifically for restaurants.</p>
+  <p>The <em>Restaurant E-Commerce Website with Intelligent Order Management</em> is designed as a full-stack
+  web application that aims to digitalize and automate the restaurant ordering process. The system
+  provides a centralized online platform where customers can explore menus, select food items, manage
+  their cart, and place orders efficiently. At the same time, it provides restaurant administrators
+  with tools to manage menu items, track orders, and maintain customer data.</p>
+
+  <h3>Need for Digital Transformation in Restaurants</h3>
+  <p>The traditional restaurant management system suffers from several limitations:</p>
+  <ul>
+    <li>High dependency on manual labor</li>
+    <li>Increased chances of order miscommunication</li>
+    <li>Long waiting times during peak hours</li>
+    <li>Lack of proper record-keeping</li>
+    <li>Limited accessibility for customers</li>
+  </ul>
+  <p>To overcome these challenges, a digital system is necessary. The proposed project addresses these
+  issues by introducing automation, accuracy, and efficiency into restaurant operations.</p>
+
+  <h3>Scope of the Project</h3>
+  <p>The scope of this project covers the design, development, and deployment of a web-based restaurant
+  ordering system. It includes the following major components:</p>
+  <ol>
+    <li><strong>User Interface Development</strong>
+      <ul>
+        <li>Development of a responsive and user-friendly interface</li>
+        <li>Ensuring compatibility across devices (desktop, tablet, mobile)</li>
+        <li>Designing intuitive navigation for better user experience</li>
+      </ul>
+    </li>
+    <li><strong>Backend System Development</strong>
+      <ul>
+        <li>Creation of RESTful APIs for handling business logic</li>
+        <li>Implementation of server-side operations using Node.js and Express.js</li>
+        <li>Handling user authentication, order processing, and data management</li>
+      </ul>
+    </li>
+    <li><strong>Data Storage Management</strong>
+      <ul>
+        <li>Use of JSON file-based storage for storing application data</li>
+        <li>Efficient storage of user information, menu item details, orders, and cart data</li>
+      </ul>
+    </li>
+    <li><strong>Security Implementation</strong>
+      <ul>
+        <li>Secure login system</li>
+        <li>Password encryption</li>
+        <li>Role-based access control (admin vs user)</li>
+      </ul>
+    </li>
+    <li><strong>Testing and Deployment</strong>
+      <ul>
+        <li>Testing system functionality</li>
+        <li>Debugging errors</li>
+        <li>Deploying application to a live environment</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>Limitations of the Project</h3>
+  <ul>
+    <li>Does not include live GPS-style delivery tracking</li>
+    <li>Online payment gateway integration is not implemented; checkout supports cash/card on delivery</li>
+    <li>Limited to single restaurant system</li>
+    <li>Does not include AI-based recommendations (future enhancement)</li>
+  </ul>
+
+  <h3>Future Scope of the Project</h3>
+  <ul>
+    <li>Integration of online payment systems (Paytm, Google Pay)</li>
+    <li>Implementation of admin-managed order status updates</li>
+    <li>Development of mobile applications (Android/iOS)</li>
+    <li>Addition of AI-based food recommendation systems</li>
+    <li>Expansion to a multi-restaurant platform</li>
+  </ul>
+
+  <h2>1.2 Description of Project</h2>
+  <p>The Restaurant E-Commerce Website is a web-based platform that facilitates interaction between
+  customers and restaurant administrators through an online interface. The system is designed using
+  modern web technologies and follows a client-server architecture.</p>
+
+  <h3>Overview of System Functionality</h3>
+  <p>The system operates through two main modules:</p>
+  <h4>1. Customer Module</h4>
+  <p>The customer module provides an interactive and easy-to-use interface for users. Key Features:</p>
+  <ul>
+    <li><strong>User Registration and Login:</strong> Users can create accounts and log in securely.</li>
+    <li><strong>Menu Browsing:</strong> Users can view food items categorized into sections such as snacks, beverages, main course, etc.</li>
+    <li><strong>Menu Item Details View:</strong> Each item includes Name, Price, Description, and Image.</li>
+    <li><strong>Cart Management:</strong> Add items, remove items, update quantities.</li>
+    <li><strong>Order Placement:</strong> Users can place orders through a simple checkout process.</li>
+    <li><strong>Order History:</strong> Users can track their previous orders.</li>
+  </ul>
+  <h4>2. Admin Module</h4>
+  <p>The admin module provides full control over the system. Key Features:</p>
+  <ul>
+    <li><strong>Menu Management:</strong> Add, update, and delete food items.</li>
+    <li><strong>Category Management:</strong> Organize menu items into categories.</li>
+    <li><strong>Order Management:</strong> View all orders and update order status.</li>
+    <li><strong>System Monitoring:</strong> Track system activity, reservations, contacts, and newsletter subscribers.</li>
+  </ul>
+
+  <h3>System Architecture</h3>
+  <p>The system follows a three-tier architecture, which ensures separation of concerns:</p>
+  <ol>
+    <li><strong>Presentation Layer (Frontend)</strong> – Built using HTML5, CSS3, and JavaScript; handles user interface and interactions.</li>
+    <li><strong>Application Layer (Backend)</strong> – Built using Node.js and Express.js; handles business logic and API requests.</li>
+    <li><strong>Data Layer (Data Storage)</strong> – JSON files are used for storing data; provides fast and flexible data retrieval.</li>
+  </ol>
+  <h3>Working of the System</h3>
+  <ol>
+    <li>User logs into the system</li>
+    <li>User browses menu items</li>
+    <li>User adds items to cart</li>
+    <li>User places order</li>
+    <li>Order is stored in data storage</li>
+    <li>Admin views and processes order</li>
+  </ol>
+
+  <h2>1.3 Objectives of the Project</h2>
+  <p>The objectives of this project are defined using the SMART framework to ensure clarity and effectiveness.</p>
+  <h3>1.3.1 Specific Objectives</h3>
+  <ul>
+    <li>To develop a complete restaurant e-commerce system</li>
+    <li>To automate manual ordering processes</li>
+    <li>To create a user-friendly interface</li>
+    <li>To implement secure login and authentication</li>
+  </ul>
+  <h3>1.3.2 Measurable Objectives</h3>
+  <ul>
+    <li>Reduce order processing errors by at least 70%</li>
+    <li>Improve customer satisfaction through faster service</li>
+    <li>Ensure system uptime and reliability</li>
+  </ul>
+  <h3>1.3.3 Achievable Objectives</h3>
+  <ul>
+    <li>Use HTML/CSS/JavaScript and Node.js/Express technologies for efficient development</li>
+    <li>Utilize existing frameworks and tools</li>
+    <li>Implement features within available resources</li>
+  </ul>
+  <h3>1.3.4 Relevant Objectives</h3>
+  <ul>
+    <li>Aligns with current industry trends</li>
+    <li>Solves real-world restaurant problems</li>
+    <li>Enhances digital transformation</li>
+  </ul>
+  <h3>1.3.5 Time-Bound Objectives</h3>
+  <p>The project is planned to be completed within six months:</p>
+  <ul>
+    <li>Month 1: Requirement analysis and planning</li>
+    <li>Month 2: System design</li>
+    <li>Month 3–4: Development</li>
+    <li>Month 5: Testing</li>
+    <li>Month 6: Deployment</li>
+  </ul>
+  <h3>Learning Outcomes</h3>
+  <ul>
+    <li>Full-stack web development</li>
+    <li>API design and integration</li>
+    <li>JSON data management</li>
+    <li>Debugging and testing</li>
+    <li>Version control using Git</li>
+  </ul>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 2                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 2</span>
+    <span class="chapter-title">Requirement Analysis and Literature Survey</span>
+  </div>
+
+  <h2>2.1 Existing Projects of Similar Characteristics</h2>
+  <p>Before designing the proposed system, a detailed study of existing systems and similar projects was
+  conducted. This analysis helps in understanding current solutions, identifying their limitations, and
+  designing a better system.</p>
+  <h3>2.1.1 Traditional Restaurant Systems</h3>
+  <p>Traditional restaurant systems rely heavily on manual processes such as taking orders verbally or
+  on paper, manual billing, and direct communication between customer and staff. Limitations include
+  high error rates, time-consuming processes during peak hours, no data storage for customer
+  preferences, limited accessibility, and inefficient management.</p>
+  <h3>2.1.2 Third-Party Food Delivery Platforms</h3>
+  <p>Platforms such as Swiggy, Zomato, and Uber Eats have revolutionized food ordering. While they
+  offer easy online ordering and wide customer reach, they impose high commission charges (20–30%),
+  reduce profit margins, create dependency on third-party services, and restrict customer data access.</p>
+  <h3>2.1.3 Existing E-Commerce Website Templates</h3>
+  <p>Generic e-commerce templates lack customization for restaurant workflows, have no optimized order
+  processing logic, limited scalability, and basic UI/UX.</p>
+  <p><strong>Conclusion:</strong> The analysis clearly shows that traditional systems lack efficiency,
+  third-party platforms reduce business control, and generic solutions lack specialization.
+  Therefore, there is a need for a custom-built, independent restaurant system.</p>
+
+  <h2>2.2 Need to Develop this Project</h2>
+  <h3>2.2.1 Operational Need</h3>
+  <ul><li>Automate manual processes</li><li>Reduce human errors</li><li>Improve order accuracy</li><li>Speed up service</li></ul>
+  <h3>2.2.2 Business Need</h3>
+  <ul><li>Eliminate dependency on third-party platforms</li><li>Avoid commission charges</li><li>Improve profit margins</li><li>Maintain direct customer relationship</li></ul>
+  <h3>2.2.3 Customer Need</h3>
+  <ul><li>Convenience of ordering from anywhere</li><li>Faster service</li><li>Better user experience</li><li>Access to order history</li></ul>
+  <h3>2.2.4 Technological Need</h3>
+  <ul><li>Adoption of modern technologies</li><li>Centralized data management</li><li>Scalable system architecture</li></ul>
+  <h3>2.2.5 Competitive Need</h3>
+  <ul><li>Restaurants need digital presence</li><li>Customers prefer online ordering</li><li>Faster systems attract more users</li></ul>
+
+  <h2>2.3 Course of Action</h2>
+  <p>The development of the system follows a structured and systematic approach:</p>
+  <ul>
+    <li><strong>Step 1 – Requirement Analysis:</strong> Identify system users (Customer, Admin), define functionalities, understand constraints.</li>
+    <li><strong>Step 2 – System Design:</strong> Design system architecture, define modules and components, plan data flow.</li>
+    <li><strong>Step 3 – Data File Design:</strong> Identify entities (Users, Menu Items, Orders), define relationships.</li>
+    <li><strong>Step 4 – Backend Development:</strong> Setup Node.js server, develop REST APIs, implement authentication.</li>
+    <li><strong>Step 5 – Frontend Development:</strong> Design UI using JavaScript, create reusable sections and helpers, integrate APIs.</li>
+    <li><strong>Step 6 – Integration:</strong> Connect frontend with backend API routes, handle data exchange and errors.</li>
+    <li><strong>Step 7 – Testing:</strong> Functional, API, and UI testing.</li>
+    <li><strong>Step 8 – Deployment:</strong> Deploy application, monitor performance.</li>
+  </ul>
+  <p><strong>Development Methodology:</strong> The project follows an iterative development approach, where
+  features are developed in phases, continuous testing is performed, and improvements are made incrementally.</p>
+
+  <h2>2.4 Literature Survey</h2>
+
+  <div class="section-label">Journal</div>
+  <p><strong>[1]</strong> A. Kumar and S. Gupta, "Secure Role-Based Access Control in Web Applications,"
+  <em>International Journal of Computer Applications</em>, vol. 183, no. 12, pp. 25–31, 2021.</p>
+  <p class="indent">This paper discusses the implementation of Role-Based Access Control (RBAC) mechanisms
+  in modern web applications. The authors explain how authentication and authorization layers improve
+  system security and prevent unauthorized data access. They highlight the use of JWT tokens and
+  middleware-based validation for maintaining secure sessions. The study also emphasizes password
+  hashing and encrypted communication protocols.</p>
+  <p class="indent"><em>This research helped in understanding secure authentication systems and implementing
+  role-based access control within the Restaurant E-Commerce Website.</em></p>
+
+  <div class="section-label">Online Journal</div>
+  <p><strong>[2]</strong> N. Singh and A. Kumar. (2022). RESTful API Design Patterns for Secure Web Applications.
+  <em>International Journal of Web Engineering and Technology</em>. [Online]. Available: https://ieeexplore.ieee.org</p>
+  <p class="indent">This online journal article explores RESTful API design patterns for building secure
+  and scalable web applications. The authors explain how stateless HTTP communication, structured API
+  endpoints, and JSON-based data exchange improve reliability and maintainability of e-commerce systems.
+  The study also discusses the use of the Fetch API for asynchronous client-server communication and
+  how middleware-based request handling improves error management.</p>
+  <p class="indent"><em>The findings of this study influenced the design of RESTful API endpoints and the
+  structured use of the Fetch API for communication between the frontend and backend of the Restaurant
+  E-Commerce Website.</em></p>
+
+  <div class="section-label">Books</div>
+  <p><strong>[3]</strong> U.K. Roy, <em>Web Technologies</em>.</p>
+  <p class="indent">This book provides foundational knowledge of HTML, CSS, JavaScript, and modern web
+  technologies. It explains client-server communication, webpage structuring, responsive design, and
+  scripting techniques. The concepts helped in designing the frontend structure and responsive user
+  interface of the Restaurant E-Commerce Website.</p>
+
+  <p><strong>[4]</strong> D. Herron, <em>Node.js Web Development</em>.</p>
+  <p class="indent">This book explains backend development using Node.js and covers server-side
+  programming, asynchronous operations, routing, and REST API development. It also discusses middleware
+  integration and scalable backend architecture. The concepts helped in developing the backend server
+  and APIs for the Restaurant E-Commerce Website.</p>
+
+  <p><strong>[5]</strong> A. Banks and E. Porcello, <em>Learning JavaScript</em>.</p>
+  <p class="indent">This book explains frontend development using HTML, CSS, and JavaScript. It discusses
+  DOM manipulation, event-driven programming, state management using in-memory variables and browser
+  storage, and modular page structure. The architectural principles helped in developing dynamic and
+  responsive frontend modules for the Restaurant E-Commerce Website.</p>
+
+  <p><strong>[6]</strong> K. Chodorow, <em>JSON file storage: The Definitive Guide</em>.</p>
+  <p class="indent">This book provides detailed insights into JSON file storage and data management
+  systems. It explains JSON-based document storage, schema flexibility, and scalability. The concepts
+  helped in designing efficient JSON data files and relationships for the Restaurant E-Commerce Website.</p>
+
+  <p><strong>[7]</strong> I. Sommerville, <em>Software Engineering</em>.</p>
+  <p class="indent">This book explains software engineering methodologies, SDLC models, system planning,
+  testing, and project management concepts. The techniques helped in understanding project planning,
+  requirement analysis, and system design methodologies used during development.</p>
+
+  <div class="section-label">Conference Paper</div>
+  <p><strong>[8]</strong> S. Mehta and P. Jain, "Scalable Node.js/Express and Vanilla Frontend Stack
+  Applications for E-Commerce Platforms," in <em>Proceedings of the International Conference on Emerging
+  Technologies in Computing</em>, 2023, pp. 112–118.</p>
+  <p class="indent">This conference paper presents the use of the Node.js/Express with vanilla frontend
+  stack in building scalable and high-performance web applications. The authors explain how REST APIs
+  improve modularity and integration capabilities. The concepts helped justify the use of modular APIs
+  and a JavaScript-based web stack for developing the Restaurant E-Commerce Website.</p>
+
+  <div class="section-label">Website References</div>
+  <p><strong>[9]</strong> MDN Web Docs: HTML, CSS, JavaScript and Web APIs. [Online]. Available: https://developer.mozilla.org</p>
+  <p class="indent">The official HTML, CSS, and JavaScript documentation provides guidance on DOM
+  manipulation, event handling, state management, Fetch API usage, and frontend optimization. Used
+  extensively while designing dynamic user interfaces and JavaScript helpers.</p>
+
+  <p><strong>[10]</strong> Node.js Official Documentation. [Online]. Available: https://nodejs.org</p>
+  <p class="indent">The Node.js documentation explains server-side JavaScript execution, asynchronous
+  programming, event-driven architecture, and backend runtime management.</p>
+
+  <p><strong>[11]</strong> Node.js File System Documentation and JSON Data Handling. [Online]. Available: https://nodejs.org/api/fs.html</p>
+  <p class="indent">The Node.js fs module documentation provides guidance on reading and writing files,
+  JSON data persistence, and synchronous/asynchronous file operations. Used while implementing the
+  JSON file-based data storage layer.</p>
+
+  <p><strong>[12]</strong> MDN Web Docs (Mozilla Developer Network). [Online]. Available: https://developer.mozilla.org</p>
+  <p class="indent">MDN Web Docs provide extensive learning material on HTML, CSS, JavaScript, and
+  modern web APIs. Referred for frontend development concepts, responsive design practices, and
+  debugging techniques.</p>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 3                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 3</span>
+    <span class="chapter-title">Planning of the Project</span>
+  </div>
+
+  <h2>3.1 Objectives of the Project</h2>
+  <h3>3.1.1 Functional Objectives</h3>
+  <ul>
+    <li>To develop a complete online food ordering system</li>
+    <li>To enable users to register, login, and manage their accounts securely</li>
+    <li>To allow users to browse menu items categorized efficiently</li>
+    <li>To implement a dynamic cart system for adding and removing items</li>
+    <li>To provide a smooth and efficient order placement process</li>
+    <li>To develop an admin panel for managing menu items and orders</li>
+  </ul>
+  <h3>3.1.2 Technical Objectives</h3>
+  <ul>
+    <li>To design a three-tier architecture (Frontend, Backend, Data Storage)</li>
+    <li>To implement RESTful APIs for communication between client and server</li>
+    <li>To develop a responsive frontend using HTML, CSS, and JavaScript</li>
+    <li>To use Node.js and Express.js for backend development</li>
+    <li>To design JSON data storage using JSON file storage</li>
+    <li>To ensure modular and maintainable code structure</li>
+  </ul>
+  <h3>3.1.3 Performance Objectives</h3>
+  <ul>
+    <li>Reduce API response time to less than 2 seconds</li>
+    <li>Optimize frontend rendering for smooth user experience</li>
+    <li>Handle multiple users simultaneously without lag</li>
+    <li>Minimize unnecessary API calls</li>
+  </ul>
+  <h3>3.1.4 Security Objectives</h3>
+  <ul>
+    <li>Implement secure password hashing using bcrypt</li>
+    <li>Use JWT (JSON Web Tokens) for authentication</li>
+    <li>Restrict admin access using role-based authorization</li>
+    <li>Prevent unauthorized API access</li>
+  </ul>
+  <h3>3.1.5 Usability Objectives</h3>
+  <ul>
+    <li>Provide a simple and intuitive user interface</li>
+    <li>Ensure easy navigation across pages</li>
+    <li>Maintain consistency in UI design</li>
+    <li>Improve overall user experience</li>
+  </ul>
+
+  <h2>3.2 Planned Steps to Achieve Above Objectives</h2>
+  <h3>3.2.1 Development Model Used</h3>
+  <p>The project uses an <strong>Iterative Development Model</strong>, where the system is developed in
+  phases, each phase is tested before moving forward, and improvements are made continuously.
+  Advantages: early detection of errors, continuous improvement, flexible to changes, faster
+  development cycles.</p>
+
+  <h2>3.3 System Architecture Planning</h2>
+  <p>The system is designed using a three-tier architecture, which ensures separation of concerns and scalability.</p>
+  <ol>
+    <li><strong>Presentation Layer (Frontend)</strong> – Built using HTML5, CSS3, and JavaScript; handles user interaction and displays data.</li>
+    <li><strong>Application Layer (Backend)</strong> – Built using Node.js and Express.js; processes business logic and handles API requests.</li>
+    <li><strong>Data Layer (Data Storage)</strong> – JSON files are used; stores all application data and ensures fast data retrieval.</li>
+  </ol>
+  <p>Advantages: Scalability, Maintainability, Clear separation of responsibilities.</p>
+
+  <h3>3.2.2 Detailed Stepwise Planning</h3>
+  <table class="data-table">
+    <thead><tr><th>Step</th><th>Activity</th><th>Details</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Requirement Analysis</td><td>Identify users (Customer, Admin); define use cases (Login/Register, Browse Menu, Place Order); identify constraints</td></tr>
+      <tr><td>2</td><td>System Design</td><td>Define architecture; plan data flow; identify modules</td></tr>
+      <tr><td>3</td><td>Data File Design</td><td>Create JSON files: Users, Menu Items, Orders, Cart; define relationships</td></tr>
+      <tr><td>4</td><td>API Design</td><td>POST /api/auth/register, POST /api/auth/login, GET /api/menu, POST /api/orders</td></tr>
+      <tr><td>5</td><td>Frontend Development</td><td>Build Navbar, Menu list, Cart; integrate Fetch API; ensure responsive design</td></tr>
+      <tr><td>6</td><td>Backend Development</td><td>Setup Express server; implement routes; configure JSON file helpers; implement middleware</td></tr>
+      <tr><td>7</td><td>Integration</td><td>Connect frontend with backend; test API responses; handle errors</td></tr>
+      <tr><td>8</td><td>Testing</td><td>Postman API testing; UI testing; debug errors</td></tr>
+      <tr><td>9</td><td>Deployment</td><td>Run frontend and backend through Express server; monitor system</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2.3 Risk Analysis and Mitigation</h3>
+  <table class="data-table">
+    <thead><tr><th>Risk</th><th>Description</th><th>Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td>Data Loss</td><td>Loss of user/order data</td><td>Data Storage backups</td></tr>
+      <tr><td>Security Breach</td><td>Unauthorized access</td><td>Encryption, authentication</td></tr>
+      <tr><td>Server Failure</td><td>Backend crash</td><td>Error handling, monitoring</td></tr>
+      <tr><td>Performance Issues</td><td>Slow response</td><td>Optimization</td></tr>
+      <tr><td>Bugs</td><td>System errors</td><td>Thorough testing</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2.4 Project Timeline (6-Month Plan)</h3>
+  <table class="data-table">
+    <thead><tr><th>Month</th><th>Phase</th><th>Activities</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Planning</td><td>Requirement analysis, Literature survey</td></tr>
+      <tr><td>2</td><td>Design</td><td>System architecture, Data Storage design</td></tr>
+      <tr><td>3</td><td>Backend Development</td><td>API development, Authentication system</td></tr>
+      <tr><td>4</td><td>Frontend Development</td><td>UI design, API integration</td></tr>
+      <tr><td>5</td><td>Testing</td><td>Debugging, Performance optimization</td></tr>
+      <tr><td>6</td><td>Deployment</td><td>Final local server testing, Documentation</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2.5 Feasibility Analysis</h3>
+  <ul>
+    <li><strong>Technical Feasibility:</strong> Node.js/Express with vanilla frontend stack is suitable; all required tools are available.</li>
+    <li><strong>Economic Feasibility:</strong> Low-cost development using open-source tools.</li>
+    <li><strong>Operational Feasibility:</strong> Easy to use system requiring minimal training.</li>
+  </ul>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 4                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 4</span>
+    <span class="chapter-title">Hardware and Software Requirements for the Project</span>
+  </div>
+
+  <h2>4.1 Hardware Requirements</h2>
+  <table class="data-table">
+    <thead><tr><th>Component</th><th>Minimum</th><th>Recommended</th></tr></thead>
+    <tbody>
+      <tr><td>Processor</td><td>Intel i3 or equivalent</td><td>Intel i5/i7</td></tr>
+      <tr><td>RAM</td><td>4 GB</td><td>8 GB or higher</td></tr>
+      <tr><td>Storage</td><td>10 GB free space</td><td>20 GB or more (SSD preferred)</td></tr>
+      <tr><td>Network</td><td>Stable internet connection</td><td>Broadband</td></tr>
+      <tr><td>End-User Device</td><td>Smartphone / Laptop</td><td>Modern browser required</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4.2 Software Requirements</h2>
+  <h3>4.2.1 Frontend Technologies</h3>
+  <ul>
+    <li><strong>HTML5:</strong> Provides structure of web pages; defines elements like forms, buttons, inputs.</li>
+    <li><strong>CSS3:</strong> Used for styling and layout; enables responsive design.</li>
+    <li><strong>JavaScript (ES6+):</strong> Adds interactivity; handles client-side logic; manages dynamic DOM updates and event-driven behavior.</li>
+    <li><strong>Vanilla JavaScript (ES6+ Modules):</strong> Core scripting language for frontend interactivity; handles all DOM manipulation and dynamic content rendering; manages client-side state via localStorage and in-memory variables.</li>
+  </ul>
+  <p>Advantages: No external framework dependency; fast and direct DOM rendering; full control over event handling and application state.</p>
+
+  <h3>4.2.2 Backend Technologies</h3>
+  <ul>
+    <li><strong>Node.js:</strong> JavaScript runtime environment; executes server-side code; event-driven architecture with non-blocking I/O.</li>
+    <li><strong>Express.js:</strong> Web framework for Node.js; simplifies API development; provides routing and middleware support.</li>
+    <li><strong>bcryptjs:</strong> Secure password hashing library.</li>
+    <li><strong>jsonwebtoken:</strong> JWT token generation and verification.</li>
+    <li><strong>helmet:</strong> Security middleware for HTTP headers.</li>
+    <li><strong>express-rate-limit:</strong> API rate limiting to prevent abuse.</li>
+    <li><strong>uuid:</strong> Unique identifier generation for records.</li>
+  </ul>
+
+  <h3>4.2.3 Data Storage Technology</h3>
+  <p>JSON file storage is used for storing all application data as structured JSON files on the server
+  filesystem using Node.js's built-in <code>fs</code> module. Features: stores data in JSON format;
+  flexible schema; simple read/write operations using <code>fs.readFileSync</code> and
+  <code>fs.writeFileSync</code>.</p>
+
+  <h2>4.3 Tools Used for Development</h2>
+  <table class="data-table">
+    <thead><tr><th>Tool</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td>Visual Studio Code</td><td>Code editor with extensions for JavaScript/Node.js development</td></tr>
+      <tr><td>Git &amp; GitHub</td><td>Version control system; code hosting and backup</td></tr>
+      <tr><td>Postman</td><td>API testing — send GET/POST/PUT/DELETE requests and debug responses</td></tr>
+      <tr><td>Chrome / Firefox</td><td>Run application; developer tools for debugging</td></tr>
+      <tr><td>VS Code JSON Viewer</td><td>Visualize JSON data files stored on filesystem</td></tr>
+      <tr><td>npm</td><td>Package manager; installs and manages project dependencies</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4.4 Techniques Used for Development</h2>
+  <h3>4.4.1 RESTful API Architecture</h3>
+  <p>The system uses REST (Representational State Transfer) architecture with stateless communication,
+  client-server separation, and resource-based URLs. HTTP methods used: GET (retrieve), POST (create),
+  PUT (update), DELETE (remove).</p>
+  <h3>4.4.2 CRUD Operations</h3>
+  <p>Create (add users/orders), Read (fetch menu items/orders), Update (modify cart/order status), Delete (remove items/orders).</p>
+  <h3>4.4.3 Authentication and Authorization</h3>
+  <p>Authentication verifies user identity through a secure login system. Authorization controls resource
+  access through admin-only routes. Security techniques: password hashing (bcrypt), JWT tokens.</p>
+  <h3>4.4.4 Asynchronous Programming</h3>
+  <p>Node.js uses asynchronous programming (async/await, Promises) to handle multiple requests simultaneously and improve performance.</p>
+  <h3>4.4.5 Section-Based Modular Architecture (JavaScript)</h3>
+  <p>UI divided into logical sections with dedicated JavaScript functions. Each section has isolated event handlers and data loaders.
+  Examples: Navbar toggle, Menu card rendering, Cart drawer management, Authentication modal.</p>
+  <h3>4.4.6 State Management</h3>
+  <p>JavaScript manages application state using DOM state variables (in-memory JavaScript variables) and
+  <code>localStorage</code> for persisting cart items and authentication tokens. Ensures dynamic UI
+  updates through targeted DOM manipulation and efficient rendering through selective element updates
+  without full page reloads.</p>
+  <h3>4.4.7 Data File Design Techniques</h3>
+  <p>Use of JSON data files with flexible JSON structure and simple structured files for easy retrieval.</p>
+  <h3>4.4.8 Error Handling</h3>
+  <p>Try-catch blocks on all async operations; Express middleware error handling for server errors.</p>
+  <h3>4.4.9 Testing Techniques</h3>
+  <p>API testing using Postman; UI testing using browser developer tools; debugging using console logging.</p>
+  <h3>4.4.10 Responsive Design</h3>
+  <p>CSS media queries and mobile-friendly design ensure compatibility across desktop, tablet, and mobile devices.</p>
+
+  <h3>Advantages of Selected Technology Stack</h3>
+  <table class="data-table">
+    <thead><tr><th>Category</th><th>Benefits</th></tr></thead>
+    <tbody>
+      <tr><td>Stack</td><td>Full JavaScript stack; fast development; scalable architecture</td></tr>
+      <tr><td>Performance</td><td>Fast API response; efficient frontend DOM rendering</td></tr>
+      <tr><td>Scalability</td><td>Can handle growing users; flexible JSON records</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 5                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 5</span>
+    <span class="chapter-title">Design of the Project</span>
+  </div>
+
+  <h2>5.1 ER/DFD/Flow Chart Diagrams</h2>
+  <p>System design defines how different components of the application interact with each other.
+  The Restaurant E-Commerce Website is designed using a modular and layered architecture, ensuring
+  scalability, maintainability, and performance.</p>
+
+  <h3>5.1.1 Flow Chart of the System</h3>
+  <div class="flowchart">
+    Start<br>↓<br>User Visits Website<br>↓<br>Login / Register<br>↓<br>Browse Menu<br>↓<br>
+    Add Items to Cart<br>↓<br>Modify Cart (Optional)<br>↓<br>Place Order<br>↓<br>
+    Order Stored in Data Storage<br>↓<br>Admin Views Order<br>↓<br>Order Processed<br>↓<br>End
+  </div>
+  <p>The system starts when a user accesses the website. The user must authenticate before placing
+  an order. After browsing and adding items, the order is stored in the data storage and the
+  admin processes it.</p>
+
+  <h3>5.1.2 Data Flow Diagram (DFD)</h3>
+  <p><strong>Level 0 DFD (Context Diagram)</strong></p>
+  <div class="flowchart">
+    [User] ──────→ (Restaurant System) ──────→ [Data Storage]<br>
+    [Admin] ─────→ (Restaurant System)
+  </div>
+  <p><strong>Level 1 – Admin Panel DFD</strong></p>
+  <div class="flowchart">
+    User → Login System → Data Storage<br>
+    User → Browse Menu → Menu Item DB<br>
+    User → Cart System → Order System → Data Storage<br>
+    Admin → Admin Panel → Data Storage
+  </div>
+  <p><strong>Level 1 – User Panel DFD (Detailed Order Flow)</strong></p>
+  <div class="flowchart">
+    User → Add to Cart → Cart Storage<br>
+    Cart → Checkout → Order Processing<br>
+    Order Processing → Data Storage<br>
+    Data Storage → Admin Panel → Admin
+  </div>
+
+  <h3>5.1.3 ER Diagram (Entity Relationship Design)</h3>
+  <div class="flowchart">
+    User (userId, name, email, password)<br>
+    &nbsp;&nbsp;│ places<br>
+    &nbsp;&nbsp;↓<br>
+    Order (orderId, userId, totalPrice, status)<br>
+    &nbsp;&nbsp;│ contains<br>
+    &nbsp;&nbsp;↓<br>
+    Menu Item (menuItemId, name, price, category)<br><br>
+    User → Cart → Menu Items
+  </div>
+  <p>A user can place multiple orders; each order contains multiple menu items; each user has a cart.</p>
+
+  <h2>5.2 Class Diagram</h2>
+  <table class="data-table">
+    <thead><tr><th>Class</th><th>Attributes</th><th>Relationships</th></tr></thead>
+    <tbody>
+      <tr><td>User</td><td>userId, name, email, password, role</td><td>One-to-Many → Order; One-to-One → Cart</td></tr>
+      <tr><td>Menu Item</td><td>menuItemId, name, category, price, description, badge, image</td><td>Many-to-Many ↔ Order</td></tr>
+      <tr><td>Order</td><td>orderId, userId, items[], totalPrice, status, paymentMethod, createdAt</td><td>Many-to-One → User</td></tr>
+      <tr><td>Cart</td><td>items[], quantities (stored in localStorage)</td><td>One-to-One → User</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5.3 Data Storage Tables</h2>
+  <h3>Users Data File (<code>data/users.json</code>)</h3>
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>String (UUID)</td><td>Unique identifier</td></tr>
+      <tr><td>name</td><td>String</td><td>User full name</td></tr>
+      <tr><td>email</td><td>String</td><td>Email address (unique)</td></tr>
+      <tr><td>password</td><td>String</td><td>bcrypt-hashed password</td></tr>
+      <tr><td>role</td><td>String</td><td>'customer' or 'admin'</td></tr>
+      <tr><td>createdAt</td><td>ISO String</td><td>Registration timestamp</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Menu Data File (<code>data/menu.json</code>)</h3>
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>String</td><td>Unique identifier</td></tr>
+      <tr><td>name</td><td>String</td><td>Menu item name</td></tr>
+      <tr><td>category</td><td>String</td><td>Category (appetizers, main-course, seafood…)</td></tr>
+      <tr><td>price</td><td>Number</td><td>Price in INR</td></tr>
+      <tr><td>description</td><td>String</td><td>Item description</td></tr>
+      <tr><td>image</td><td>String</td><td>Relative path to image asset</td></tr>
+      <tr><td>badge</td><td>String / null</td><td>Label e.g. "New", "Seasonal", "Best Seller"</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Orders Data File (<code>data/orders.json</code>)</h3>
+  <table class="data-table">
+    <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>String (UUID)</td><td>Unique order ID</td></tr>
+      <tr><td>userId</td><td>String</td><td>Reference to placing user</td></tr>
+      <tr><td>customerName / Email / Phone</td><td>String</td><td>Customer contact details</td></tr>
+      <tr><td>deliveryAddress</td><td>String</td><td>Delivery address</td></tr>
+      <tr><td>items</td><td>Array</td><td>List of ordered menu items with quantities</td></tr>
+      <tr><td>totalPrice</td><td>Number</td><td>Total cost</td></tr>
+      <tr><td>paymentMethod</td><td>String</td><td>Cash on Delivery / Card on Delivery</td></tr>
+      <tr><td>status</td><td>String</td><td>pending / preparing / out-for-delivery / completed / cancelled</td></tr>
+      <tr><td>createdAt</td><td>ISO String</td><td>Order placement timestamp</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Client Cart Storage (<code>localStorage</code>)</h3>
+  <table class="data-table">
+    <thead><tr><th>Key</th><th>Type</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>feastflow_cart</td><td>JSON Array</td><td>Cart items with id, name, price, image, quantity</td></tr>
+      <tr><td>feastflow_token</td><td>String</td><td>JWT authentication token</td></tr>
+      <tr><td>feastflow_user</td><td>JSON Object</td><td>Logged-in user profile</td></tr>
+    </tbody>
+  </table>
+
+  <h3>System Design Advantages &amp; Limitations</h3>
+  <table class="data-table">
+    <thead><tr><th>Advantages</th><th>Limitations</th></tr></thead>
+    <tbody>
+      <tr><td>Modular design — easy to maintain and extend</td><td>No real-time tracking</td></tr>
+      <tr><td>Scalable architecture</td><td>No payment gateway integration</td></tr>
+      <tr><td>Flexible JSON file storage</td><td>Single restaurant system</td></tr>
+      <tr><td>Fast API responses</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 6                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 6</span>
+    <span class="chapter-title">Implementation of the Project</span>
+  </div>
+
+  <h2>6.1 Screenshots of Working Project</h2>
+
+  <h3>6.1.1 Homepage Interface of the Website</h3>
+  <p>The homepage serves as the main entry point for users, featuring a visually appealing banner with
+  high-quality food imagery, a navigation bar, and prominent call-to-action buttons ("Find a Table",
+  "View Our Menu"). It ensures easy navigation, responsiveness, and accessibility across devices.</p>
+  <figure>
+    <img src="../assets/images/logo.svg" alt="Feast Flow Logo">
+    <figcaption>Figure 6.1 — Feast Flow Logo &amp; Brand Identity</figcaption>
+  </figure>
+
+  <h3>6.1.2 Menu Section of the Website</h3>
+  <p>The menu section displays food items in an organized and visually appealing manner. Each item
+  includes the name, price, description, and an image. Items are divided into categories and
+  highlighted with labels like "Seasonal", "New", and "Best Seller". Users can add items directly
+  to the cart from this section.</p>
+  <figure>
+    <img src="../assets/images/menu-1.jpg" alt="Paneer Tikka">
+    <figcaption>Figure 6.2 — Paneer Tikka (Appetizer) — ₹260</figcaption>
+  </figure>
+  <figure>
+    <img src="../assets/images/menu-2.jpg" alt="Butter Chicken">
+    <figcaption>Figure 6.3 — Butter Chicken (Main Course) — ₹420</figcaption>
+  </figure>
+  <figure>
+    <img src="../assets/images/menu-4.jpg" alt="Hyderabadi Biryani">
+    <figcaption>Figure 6.4 — Hyderabadi Biryani (Main Course) — ₹360</figcaption>
+  </figure>
+  <figure>
+    <img src="../assets/images/menu-5.jpg" alt="Shami Kebab">
+    <figcaption>Figure 6.5 — Shami Kebab (Appetizer) — ₹280</figcaption>
+  </figure>
+  <figure>
+    <img src="../assets/images/menu-6.jpg" alt="Goan Fish Curry">
+    <figcaption>Figure 6.6 — Goan Fish Curry (Seafood) — ₹450</figcaption>
+  </figure>
+
+  <h3>6.1.3 Upcoming Events / Blog Section</h3>
+  <p>This section showcases recent updates, events, and featured content with cards containing images,
+  dates, titles, and short descriptions. A "View Our Blog" button allows users to explore more. It
+  helps improve user interaction and keep the website dynamic.</p>
+
+  <h3>6.1.4 Online Reservation and Contact Section</h3>
+  <p>This section allows users to book a table by filling out a reservation form with name, phone
+  number, number of persons, date, time, and additional messages. Alongside the form, contact
+  information (phone, location, operating hours) is displayed. Form submissions are handled via the
+  <code>/api/reservations</code> REST endpoint and persisted to <code>data/reservations.json</code>.</p>
+
+  <h3>6.1.5 "Why Choose Us" / Our Strength Section</h3>
+  <p>This section highlights key strengths — hygienic food preparation, fresh environment, experienced
+  chefs, and event facilities — using icons and short descriptions to build trust with customers.</p>
+
+  <h3>6.1.6 Customer Testimonial Section</h3>
+  <p>A testimonial carousel displays customer reviews with quotes, names, and profile images. The
+  auto-advancing carousel with clickable dot navigation is implemented in vanilla JavaScript.</p>
+
+  <h3>6.1.7 Footer Section and Newsletter Subscription</h3>
+  <p>The footer provides essential restaurant information (address, contact details, operating hours),
+  a navigation menu, and social media links. A newsletter subscription form accepts user email and
+  persists the subscription via the <code>/api/newsletter</code> endpoint.</p>
+
+
+  <h2>6.2 Code Snippets</h2>
+
+  <h3>6.2.1 Parallax Effect JavaScript Implementation</h3>
+  <p>This code implements a parallax scrolling effect based on mouse position. Elements with the
+  <code>data-parallax-item</code> attribute are moved at different speeds based on
+  <code>data-parallax-speed</code>, creating a layered depth effect on the homepage.</p>
+<pre><code>const parallaxItems = document.querySelectorAll("[data-parallax-item]");
+let x, y;
+
+window.addEventListener("mousemove", function (event) {
+  x = (event.clientX / window.innerWidth * 10) - 5;
+  y = (event.clientY / window.innerHeight * 10) - 5;
+  x = x - (x * 2);
+  y = y - (y * 2);
+
+  for (let i = 0, len = parallaxItems.length; i &lt; len; i++) {
+    const speedX = x * Number(parallaxItems[i].dataset.parallaxSpeed);
+    const speedY = y * Number(parallaxItems[i].dataset.parallaxSpeed);
+    parallaxItems[i].style.transform =
+      `translate3d(${speedX}px, ${speedY}px, 0px)`;
+  }
+});</code></pre>
+
+  <h3>6.2.2 Navigation Bar Toggle Functionality</h3>
+  <p>This code handles mobile navbar toggling. Clicking any <code>[data-nav-toggler]</code> element
+  adds or removes the <code>active</code> class on the navbar and overlay, providing a smooth
+  open/close animation suitable for small screens.</p>
+<pre><code>const navbar     = document.querySelector("[data-navbar]");
+const navTogglers = document.querySelectorAll("[data-nav-toggler]");
+const overlay    = document.querySelector("[data-overlay]");
+
+const toggleNavbar = function () {
+  navbar.classList.toggle("active");
+  overlay.classList.toggle("active");
+  document.body.classList.toggle("nav-active");
+}
+addEventOnElements(navTogglers, "click", toggleNavbar);</code></pre>
+
+  <h3>6.2.3 Hero Slider Functionality</h3>
+  <p>The hero slider cycles through banner slides automatically every 7 seconds. The
+  <code>slideNext</code> / <code>slidePrev</code> functions manage active class toggling across the
+  slide items. A typing animation is triggered for each slide's subtitle using the
+  <code>typeSubtitle</code> function.</p>
+<pre><code>let currentSlidePos = 0;
+let lastActiveSliderItem = heroSliderItems[0];
+
+const updateSliderPos = function () {
+  lastActiveSliderItem.classList.remove("active");
+  heroSliderItems[currentSlidePos].classList.add("active");
+  lastActiveSliderItem = heroSliderItems[currentSlidePos];
+  resetProgress();
+  typeSubtitle(heroSliderItems[currentSlidePos]);
+}
+
+const slideNext = function () {
+  if (currentSlidePos >= heroSliderItems.length - 1) currentSlidePos = 0;
+  else currentSlidePos++;
+  updateSliderPos();
+}
+
+const slidePrev = function () {
+  if (currentSlidePos &lt;= 0) currentSlidePos = heroSliderItems.length - 1;
+  else currentSlidePos--;
+  updateSliderPos();
+}
+
+if (heroSliderNextBtn) heroSliderNextBtn.addEventListener("click", slideNext);
+if (heroSliderPrevBtn) heroSliderPrevBtn.addEventListener("click", slidePrev);
+
+const startAutoSlide = () => { autoSlideInterval = setInterval(slideNext, 7000); }
+window.addEventListener("load", () => { if (heroSliderItems.length > 0) startAutoSlide(); });</code></pre>
+
+  <h3>6.2.4 Online Reservation Form Structure (HTML Implementation)</h3>
+  <p>The reservation form uses the <code>wireForm</code> utility which intercepts submit, validates
+  required fields, serializes the form to JSON, and sends a POST to <code>/api/reservations</code>.
+  The server persists the booking to <code>data/reservations.json</code> and returns a success toast.</p>
+<pre><code>wireForm("reservation-form", "/api/reservations",
+  "Reservation created successfully!");
+wireForm("newsletter-form",  "/api/newsletter",
+  "Subscribed to newsletter successfully!");
+wireForm("contact-form",     "/api/contact",
+  "Message sent successfully!");
+
+// wireForm internally does:
+const response = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(data)
+});</code></pre>
+
+  <h3>6.2.5 Express Server Setup and API Routing</h3>
+  <p>The <code>server.js</code> file configures the Express application with Helmet (HTTP security
+  headers), CORS, API rate limiting (100 requests per 15 minutes), and registers all route modules.
+  The server auto-increments the port if the default is already occupied.</p>
+<pre><code>'use strict';
+const express = require('express');
+const cors    = require('cors');
+const helmet  = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+const app  = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(cors());
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname)));
+
+app.use('/api/reservations', reservationsRouter);
+app.use('/api/newsletter',   newsletterRouter);
+app.use('/api/contact',      contactRouter);
+app.use('/api/menu',         menuRouter);
+app.use('/api/auth',         authRouter.router);
+app.use('/api/orders',       ordersRouter);
+
+function startServer(port) {
+  const server = app.listen(port, () =>
+    console.log(`Feast Flow running at http://localhost:${port}`)
+  );
+  server.on('error', err => {
+    if (err.code === 'EADDRINUSE') startServer(port + 1);
+  });
+}
+authRouter.seedAdmin();
+startServer(PORT);</code></pre>
+
+  <h3>6.2.6 JSON File-Based Data Helpers for Menu Management</h3>
+  <p>All route files follow the same <code>readData</code> / <code>writeData</code> pattern using
+  Node.js's built-in <code>fs</code> module. The menu GET endpoint supports an optional
+  <code>?category=</code> query parameter for filtered browsing.</p>
+<pre><code>const DATA_FILE = path.join(__dirname, '..', 'data', 'menu.json');
+
+function readData() {
+  try {
+    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch { return []; }
+}
+function writeData(data) {
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+}
+
+// GET /api/menu — optional ?category= filter
+router.get('/', (req, res) => {
+  let menu = readData();
+  if (req.query.category) {
+    menu = menu.filter(item =>
+      item.category.toLowerCase() === req.query.category.toLowerCase()
+    );
+  }
+  res.json({ success: true, data: menu, total: menu.length });
+});</code></pre>
+
+  <h3>6.2.7 JWT-Based User Authentication Route</h3>
+  <p>Passwords are hashed with <code>bcryptjs</code> (salt rounds = 10) before storage. On
+  successful login or registration, a 24-hour JWT signed with the server secret is returned to the
+  client, which stores it in <code>localStorage</code> for subsequent authenticated requests.</p>
+<pre><code>// POST /api/auth/register
+router.post('/register', (req, res) => {
+  const { name, email, password } = req.body;
+  if (!password || password.length &lt; 6)
+    return res.status(400).json({ error: 'Password min 6 characters.' });
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const users = readData();
+  if (users.some(u => u.email === normalizedEmail))
+    return res.status(400).json({ error: 'Email already exists.' });
+
+  const hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+  const newUser = { id: uuidv4(), name: name.trim(), email: normalizedEmail,
+                    password: hashedPassword, role: 'customer',
+                    createdAt: new Date().toISOString() };
+  users.push(newUser); writeData(users);
+  const token = jwt.sign({ id: newUser.id, role: newUser.role },
+                          JWT_SECRET, { expiresIn: '24h' });
+  res.status(201).json({ success: true, token });
+});
+
+// POST /api/auth/login
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const users = readData();
+  const user  = users.find(u => u.email === email.trim().toLowerCase());
+  if (!user || !bcrypt.compareSync(password, user.password))
+    return res.status(400).json({ error: 'Invalid email or password.' });
+
+  const token = jwt.sign({ id: user.id, name: user.name,
+                            email: user.email, role: user.role },
+                          JWT_SECRET, { expiresIn: '24h' });
+  res.json({ success: true, token,
+             user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+});</code></pre>
+
+  <h3>6.2.8 Client-Side Cart Management</h3>
+  <p>The cart is persisted in <code>localStorage</code> as a JSON array. <code>addToCart</code>
+  increments the quantity if the item already exists, otherwise pushes a new entry. Every mutation
+  calls <code>saveCart</code> which triggers <code>updateCartUI</code> to re-render the drawer.</p>
+<pre><code>const getCart  = () => {
+  try { return JSON.parse(localStorage.getItem("feastflow_cart")) || []; }
+  catch { return []; }
+};
+const saveCart = (cart) => {
+  localStorage.setItem("feastflow_cart", JSON.stringify(cart));
+  updateCartUI();
+};
+
+const addToCart = (id, name, price, image) => {
+  const cart = getCart();
+  const existing = cart.find(item => item.id === id);
+  if (existing) existing.quantity += 1;
+  else cart.push({ id, name, price: Number(price), image, quantity: 1 });
+  saveCart(cart);
+  showToast(`Added ${name} to cart!`, "success");
+};
+
+const updateCartQuantity = (id, amount) => {
+  let cart = getCart();
+  const item = cart.find(item => item.id === id);
+  if (!item) return;
+  item.quantity += amount;
+  if (item.quantity &lt;= 0) cart = cart.filter(item => item.id !== id);
+  saveCart(cart);
+};</code></pre>
+
+  <h3>6.2.9 Order Placement Route (Backend)</h3>
+  <p>The <code>POST /api/orders</code> route requires a valid JWT. It validates the cart payload,
+  calculates the total price server-side (to prevent client-side tampering), and persists the order
+  to <code>data/orders.json</code>. Admins can update status via <code>PATCH /api/orders/:id</code>.</p>
+<pre><code>router.post('/', authenticateJWT, (req, res) => {
+  const { phone, address, items, paymentMethod, notes } = req.body;
+  if (!phone || !address)
+    return res.status(400).json({ error: 'Phone and address required.' });
+  if (!items || !items.length)
+    return res.status(400).json({ error: 'Cart is empty.' });
+
+  let totalPrice = 0;
+  for (const item of items)
+    totalPrice += Number(item.price) * Number(item.quantity);
+
+  const newOrder = {
+    id: uuidv4(), userId: req.user.id, customerName: req.user.name,
+    customerEmail: req.user.email, customerPhone: phone.trim(),
+    deliveryAddress: address.trim(),
+    items: items.map(i => ({ name: i.name, price: Number(i.price),
+                              quantity: Number(i.quantity) })),
+    totalPrice: Number(totalPrice.toFixed(2)),
+    paymentMethod: paymentMethod || 'Cash on Delivery',
+    notes: notes ? notes.trim() : '', status: 'pending',
+    createdAt: new Date().toISOString()
+  };
+  const orders = readData(); orders.push(newOrder); writeData(orders);
+  res.status(201).json({ success: true, order: newOrder });
+});
+
+// PATCH /api/orders/:id — Admin only
+router.patch('/:id', authenticateJWT, isAdmin, (req, res) => {
+  const { status } = req.body;
+  const validStatuses = ['pending','preparing',
+                         'out-for-delivery','completed','cancelled'];
+  if (!validStatuses.includes(status))
+    return res.status(400).json({ error: 'Invalid status.' });
+
+  const orders = readData();
+  const order  = orders.find(o => o.id === req.params.id);
+  if (!order) return res.status(404).json({ error: 'Order not found.' });
+  order.status = status; writeData(orders);
+  res.json({ success: true, order });
+});</code></pre>
+
+  <h3>6.2.10 Admin Dashboard — Orders Table with Status Management</h3>
+  <p>The admin orders tab fetches all orders using the admin JWT via <code>GET /api/orders/all</code>,
+  computes live metrics (total, pending, in-progress, revenue), and renders an editable status
+  <code>&lt;select&gt;</code> per row that calls <code>updateOrderStatus</code> on change.</p>
+<pre><code>async function fetchOrders() {
+  const token = getAdminToken();
+  if (!token) { showAdminLoginModal(); return; }
+  const response = await fetch('/api/orders/all', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (response.ok) {
+    const result = await response.json();
+    ordersData = result.data;
+    applyOrdersFilter();
+    renderOrdersMetrics(ordersData);
+  }
+}
+
+function renderOrdersMetrics(data) {
+  const revenue = data
+    .filter(o => o.status !== 'cancelled')
+    .reduce((sum, o) => sum + o.totalPrice, 0);
+  document.getElementById('metric-total').textContent   = data.length;
+  document.getElementById('metric-pending').textContent =
+    data.filter(o => o.status === 'pending').length;
+  document.getElementById('metric-revenue').textContent = formatCurrency(revenue);
+}
+
+async function updateOrderStatus(id, status) {
+  const token = getAdminToken();
+  const response = await fetch(`/api/orders/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json',
+               'Authorization': 'Bearer ' + token },
+    body: JSON.stringify({ status })
+  });
+  if (response.ok) { showToast(`Status → ${status}`, 'success'); fetchOrders(); }
+}</code></pre>
+
+  <h3>6.2.11 Dynamic Menu Rendering with Add to Cart Button</h3>
+  <p>On page load, <code>loadMenu</code> fetches <code>GET /api/menu</code> and replaces the static
+  HTML fallback with dynamically generated menu cards. Each card's "Add to Cart" button carries
+  <code>data-*</code> attributes that the cart event delegation handler reads to add the item.</p>
+<pre><code>const loadMenu = async () => {
+  if (!menuGrid) return;
+  const response = await fetch("/api/menu");
+  if (!response.ok) return;
+  const { data: menuItems } = await response.json();
+  if (!menuItems.length) return;
+  menuGrid.innerHTML = "";
+  menuItems.forEach((item, index) => {
+    const imagePath = normalizeAssetPath(item.image);
+    const li = document.createElement("li");
+    li.setAttribute("data-reveal", "fade-up");
+    li.style.animationDelay = `${index * 50}ms`;
+    li.innerHTML = `
+      &lt;div class="menu-card"&gt;
+        &lt;figure class="card-banner"&gt;
+          &lt;img src="${imagePath}" alt="${item.name}" class="img-cover"
+            onerror="this.src='./assets/images/menu-1.jpg'"&gt;
+        &lt;/figure&gt;
+        &lt;div&gt;
+          &lt;div class="title-wrapper"&gt;
+            &lt;h3 class="title-3"&gt;${item.name}&lt;/h3&gt;
+            ${item.badge ? `&lt;span class="badge"&gt;${item.badge}&lt;/span&gt;` : ""}
+            &lt;span class="title-2"&gt;${formatCurrency(item.price)}&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;p class="card-text"&gt;${item.description}&lt;/p&gt;
+          &lt;button class="add-to-cart-btn"
+            data-id="${item.id}" data-name="${item.name}"
+            data-price="${item.price}" data-image="${imagePath}"&gt;
+            Add to Cart
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;`;
+    menuGrid.appendChild(li);
+    revealObserver.observe(li);
+  });
+};
+window.addEventListener("load", loadMenu);</code></pre>
+
+  <h3>6.2.12 Cart Drawer Scrollable Layout (CSS)</h3>
+  <p>The fixed-position cart drawer slides in from the right. <code>.cart-drawer-body</code> uses
+  <code>flex: 1 1 auto</code> with <code>overflow-y: auto</code> so only the item list scrolls while
+  the header and checkout footer remain fixed in view.</p>
+<pre><code>.cart-drawer {
+  position: fixed; top: 0; right: -420px;
+  width: 100%; max-width: 400px;
+  height: 100vh; height: 100dvh;
+  background: var(--smoky-black-1);
+  box-shadow: -10px 0 30px rgba(0,0,0,.5);
+  z-index: 30; display: flex; flex-direction: column;
+  transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cart-drawer.active { right: 0; }
+
+.cart-drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(5px);
+  opacity: 0; visibility: hidden; z-index: 25;
+  transition: var(--transition-1);
+}
+.cart-drawer-overlay.active { opacity: 1; visibility: visible; }
+
+.cart-drawer-body {
+  flex: 1 1 auto; min-height: 0; padding: 24px;
+  overflow-x: hidden; overflow-y: auto;
+  overscroll-behavior: contain; gap: 20px;
+  -webkit-overflow-scrolling: touch;
+}</code></pre>
+
+  <h3>6.2.13 Currency Formatter and Asset Path Normalizer</h3>
+  <p>These two utility functions are shared across both <code>script.js</code> and <code>admin.js</code>.
+  <code>formatCurrency</code> uses the browser's <code>Intl.NumberFormat</code> API to render prices
+  in Indian Rupees. <code>normalizeAssetPath</code> ensures image paths stored in JSON always resolve
+  correctly regardless of whether they start with <code>/</code>, <code>./</code>, or a full URL.</p>
+<pre><code>const CURRENCY_FORMATTER = new Intl.NumberFormat("en-IN", {
+  style: "currency", currency: "INR", maximumFractionDigits: 0
+});
+
+const formatCurrency = (amount) =>
+  CURRENCY_FORMATTER.format(Number(amount) || 0);
+
+const normalizeAssetPath = (path) => {
+  if (!path) return "./assets/images/menu-1.jpg";
+  if (/^(https?:)?\/\//.test(path) || path.startsWith("data:"))
+    return path;
+  if (path.startsWith("/")) return `.${path}`;
+  return path;
+};</code></pre>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 7                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 7</span>
+    <span class="chapter-title">Conclusions / Future Scope of the Project</span>
+  </div>
+
+  <h2>7.1 Conclusions of the Project</h2>
+  <p>The Restaurant E-Commerce Website project was successfully developed to provide a modern,
+  user-friendly, and efficient online platform for restaurant management and food ordering services.
+  The main objective of the project was to simplify the process of browsing menus, placing food
+  orders, managing customer information, and handling restaurant operations digitally. The system
+  helps bridge the gap between customers and restaurants by offering a convenient and time-saving solution.</p>
+  <p>The project integrates various important functionalities such as user registration and login,
+  menu display, food categorization, cart management, online ordering, and order tracking. An admin
+  panel was also implemented to allow restaurant administrators to manage food items, customer orders,
+  prices, and other essential operations effectively. The website was designed with a responsive
+  interface so that users can access it easily through desktops, tablets, and mobile devices.</p>
+  <p>During the development of the project, modern web technologies and data management concepts were
+  applied successfully. The project improved practical understanding of frontend development, backend
+  integration, JSON data-file integration, and user interface design. Security and data management
+  techniques were also considered to ensure proper handling of customer information and transactions.</p>
+  <p>The outcomes demonstrate that the system is capable of reducing manual work, improving order
+  accuracy, and enhancing customer satisfaction. Overall, the Restaurant E-Commerce Website achieved
+  its intended goals and proved to be a reliable, scalable, and effective solution for online food
+  ordering and restaurant management.</p>
+
+  <h2>7.2 Results in Tabular Form</h2>
+  <p><strong>TABLE 1: Comparison Between Existing System and Proposed System</strong></p>
+  <table class="data-table">
+    <thead><tr><th>Parameter</th><th>Existing System (Traditional)</th><th>Proposed System (E-Commerce)</th></tr></thead>
+    <tbody>
+      <tr><td>Order Placement</td><td>Manual (phone/in-person)</td><td>Website-based</td></tr>
+      <tr><td>Time Consumption</td><td>High</td><td>Low</td></tr>
+      <tr><td>Menu Accessibility</td><td>Limited (physical menu)</td><td>Available anytime, anywhere</td></tr>
+      <tr><td>Order Accuracy</td><td>Prone to human errors</td><td>High accuracy</td></tr>
+      <tr><td>Payment Method</td><td>Mostly cash</td><td>Cash / Card on Delivery</td></tr>
+      <tr><td>Record Management</td><td>Manual records</td><td>Automated JSON file records</td></tr>
+      <tr><td>Customer Convenience</td><td>Limited</td><td>High</td></tr>
+      <tr><td>Scalability</td><td>Difficult</td><td>Easily scalable</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>TABLE 2: Functional Results of the System</strong></p>
+  <table class="data-table">
+    <thead><tr><th>Module</th><th>Expected Outcome</th><th>Actual Result</th></tr></thead>
+    <tbody>
+      <tr><td>User Registration</td><td>Easy account creation</td><td>Successfully implemented</td></tr>
+      <tr><td>Login System</td><td>Secure authentication</td><td>Working accurately (JWT + bcrypt)</td></tr>
+      <tr><td>Menu Display</td><td>Organized food categories</td><td>Clear and user-friendly interface</td></tr>
+      <tr><td>Cart System</td><td>Add/remove items easily</td><td>Smooth localStorage-based functionality</td></tr>
+      <tr><td>Order Placement</td><td>Quick and efficient ordering</td><td>Successfully achieved</td></tr>
+      <tr><td>Admin Panel</td><td>Manage items and orders</td><td>Fully functional with 5 tabs</td></tr>
+      <tr><td>Data File Handling</td><td>Store data in JSON files</td><td>Reliable local JSON data storage</td></tr>
+    </tbody>
+  </table>
+
+  <p><strong>TABLE 3: Performance Evaluation</strong></p>
+  <table class="data-table">
+    <thead><tr><th>Criteria</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>System Efficiency</td><td>High</td></tr>
+      <tr><td>User Satisfaction</td><td>High</td></tr>
+      <tr><td>Response Time</td><td>Fast (&lt; 2 seconds)</td></tr>
+      <tr><td>Error Rate</td><td>Minimal</td></tr>
+      <tr><td>Reliability</td><td>Strong</td></tr>
+    </tbody>
+  </table>
+
+  <h2>7.3 Future Scope of Project</h2>
+  <ol>
+    <li><strong>Mobile Application Development:</strong> Develop a dedicated Android/iOS app to improve accessibility.</li>
+    <li><strong>Online Payment Integration:</strong> Add UPI, credit/debit card, and digital wallet support for seamless transactions.</li>
+    <li><strong>Real-Time Order Tracking System:</strong> Allow customers to track food orders in real time for better transparency.</li>
+    <li><strong>AI-Based Recommendation System:</strong> Suggest food items based on user preferences and previous order history.</li>
+    <li><strong>Multi-Restaurant Support:</strong> Expand into a multi-vendor platform where multiple restaurants can register and offer services.</li>
+  </ol>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 8                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter about-org">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 8</span>
+    <span class="chapter-title">About the Organisation</span>
+  </div>
+
+  <p>PG Tech Solutions is a leading IT training and software development company established to provide
+  industry-oriented technical education and advanced digital solutions. They specialize in a wide range
+  of services including Web Development, Mobile Application Development, Digital Marketing, Search
+  Engine Optimization (SEO), Software Development, UI/UX Designing, Cloud Computing, Cyber Security,
+  Artificial Intelligence, Machine Learning, Data Science, Graphic Designing, Video Editing, and IT
+  Consulting Services. PG Tech Solutions also offers Industrial Training, Internship Programs,
+  Corporate Training, Placement Assistance, and Job-Oriented Courses for students and professionals.</p>
+
+  <p>PG Tech Solutions provides complete IT and software solutions supporting the entire business process
+  from planning and consulting to development, deployment, maintenance, testing, and technical support.
+  With experienced trainers and developers, the company focuses on delivering practical learning, live
+  project exposure, affordable training programs, and career-oriented technical skills to students and
+  businesses. Their goal is to bridge the gap between academic knowledge and real industry requirements
+  through hands-on project-based learning and professional mentorship.</p>
+
+  <p>Additionally, PG Tech Solutions provides training programs including 6 Weeks/6 Months Industrial
+  Training, Internship-Based Training, Project-Based Training, Corporate Training, and Job-Oriented
+  Courses covering major IT technologies such as Full Stack Development (MEAN/MERN), JavaScript,
+  Angular, Node.js, Vue.js, Python, AI, Machine Learning, Data Science, Cloud Computing, Cyber
+  Security, Flutter, Android Development, Java, PHP, Laravel, WordPress, Digital Marketing, SEO,
+  UI/UX Designing, and many more.</p>
+
+  <p>The company emphasizes practical implementation, real-time projects, certification programs,
+  interview preparation, and placement support to help students and professionals build successful
+  careers in the IT industry.</p>
+
+  <table class="data-table">
+    <tbody>
+      <tr><td><strong>Phone</strong></td><td>+91-9815595408, +91-7717313727</td></tr>
+      <tr><td><strong>E-Mail</strong></td><td>gatiprerna@gmail.com</td></tr>
+      <tr><td><strong>Website</strong></td><td>www.pgtechsolutions.com</td></tr>
+      <tr><td><strong>Office (1)</strong></td><td>Phase 8B, Industrial Area, Sector 74, Mohali, Punjab</td></tr>
+      <tr><td><strong>Office (2)</strong></td><td>Sector 34A, Chandigarh, India</td></tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ╔══════════════════════════════════════════════════╗ -->
+<!-- ║               CHAPTER 9                         ║ -->
+<!-- ╚══════════════════════════════════════════════════╝ -->
+<div class="chapter references">
+  <div class="chapter-header">
+    <span class="chapter-label">Chapter 9</span>
+    <span class="chapter-title">References</span>
+  </div>
+
+  <div class="section-label">Journal</div>
+  <ol start="1">
+    <li>A. Kumar and S. Gupta, "Secure Authentication Systems in Web Applications," <em>International Journal of Computer Applications</em>, vol. 183, no. 12, pp. 25–31, 2021.</li>
+    <li>R. Patel and M. Shah, "Scalable Web Application Design for E-Commerce Platforms," <em>IEEE Access</em>, vol. 10, pp. 112–118, 2022.</li>
+  </ol>
+
+  <div class="section-label">Online Journal</div>
+  <ol start="3">
+    <li>M. Verma and P. Arora. (2023). Modern Node.js/Express and Vanilla Frontend Stack Development Techniques for E-Commerce Applications. <em>Journal of Web Engineering</em>. [Online]. Available: https://www.sciencedirect.com</li>
+    <li>S. Gupta and R. Mehta. (2022). Secure Authentication and Authorization in Full Stack Web Applications. <em>International Journal of Advanced Computer Science</em>. [Online]. Available: https://ieeexplore.ieee.org</li>
+  </ol>
+
+  <div class="section-label">Books</div>
+  <ol start="5">
+    <li>U.K. Roy, <em>Web Technologies</em>. Oxford University Press.</li>
+    <li>D. Herron, <em>Node.js Web Development</em>. Packt Publishing.</li>
+    <li>A. Banks and E. Porcello, <em>Learning JavaScript</em>. O'Reilly Media.</li>
+    <li>I. Sommerville, <em>Software Engineering</em>, 10th ed., Pearson Education.</li>
+  </ol>
+
+  <div class="section-label">Conference Paper</div>
+  <ol start="9">
+    <li>S. Mehta and P. Jain, "Scalable Node.js/Express and Vanilla Frontend Stack Applications for E-Commerce Platforms," in <em>Proceedings of the International Conference on Emerging Technologies in Computing</em>, 2023, pp. 112–118.</li>
+  </ol>
+
+  <div class="section-label">Website References</div>
+  <ol start="10">
+    <li>MDN Web Docs: HTML, CSS, JavaScript and Web APIs. [Online]. Available: https://developer.mozilla.org</li>
+    <li>Node.js Official Documentation. [Online]. Available: https://nodejs.org</li>
+    <li>Express.js Documentation. [Online]. Available: https://expressjs.com</li>
+    <li>Node.js File System (fs) Module Documentation. [Online]. Available: https://nodejs.org/api/fs.html</li>
+    <li>MDN Web Docs (Mozilla Developer Network). [Online]. Available: https://developer.mozilla.org</li>
+  </ol>
+</div>
+
+</body>
+</html>

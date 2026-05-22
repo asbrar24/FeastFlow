@@ -11,6 +11,8 @@ const reservationsRouter = require('./routes/reservations');
 const newsletterRouter = require('./routes/newsletter');
 const contactRouter = require('./routes/contact');
 const menuRouter = require('./routes/menu');
+const authRouter = require('./routes/auth');
+const ordersRouter = require('./routes/orders');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,6 +44,8 @@ app.use('/api/reservations', reservationsRouter);
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/menu', menuRouter);
+app.use('/api/auth', authRouter.router);
+app.use('/api/orders', ordersRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -59,8 +63,25 @@ app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'API endpoint not found' });
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🍽️  FeastFlow Server running at http://localhost:${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}/api`);
-  console.log(`🔧 Admin panel at http://localhost:${PORT}/admin.html\n`);
-});
+// Function to start server on an available port
+function startServer(port) {
+  const server = app.listen(port, () => {
+    console.log(`\nFeast Flow Server running at http://localhost:${port}`);
+    console.log(`📡 API available at http://localhost:${port}/api`);
+    console.log(`🔧 Admin panel at http://localhost:${port}/admin.html\n`);
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`⚠️  Port ${port} is already in use. Trying port ${port + 1}...`);
+      startServer(port + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+}
+
+// Seed default administrator account
+authRouter.seedAdmin();
+
+startServer(PORT);

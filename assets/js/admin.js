@@ -1,10 +1,27 @@
 'use strict';
 
+const CURRENCY_FORMATTER = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0
+});
+
+const formatCurrency = (amount) => CURRENCY_FORMATTER.format(Number(amount) || 0);
+const normalizeAssetPath = (path) => {
+  if (!path) return "./assets/images/menu-1.jpg";
+  if (/^(https?:)?\/\//.test(path) || path.startsWith("data:")) return path;
+  if (path.startsWith("/")) return `.${path}`;
+  return path;
+};
+
 // Global Data Storage for searching
 let reservationsData = [];
 let menuData = [];
 let contactsData = [];
 let newsletterData = [];
+let ordersData = [];       // all orders from /api/orders/all
+let ordersFilteredData = []; // current filter+search view
+let currentOrderFilter = 'all';
 
 // DOM Elements
 const tabButtons = document.querySelectorAll(".sidebar-nav .nav-item");
@@ -64,6 +81,9 @@ const loadTabData = (tabName) => {
   switch (tabName) {
     case "reservations":
       fetchReservations();
+      break;
+    case "orders":
+      fetchOrders();
       break;
     case "menu":
       fetchMenu();
@@ -177,13 +197,13 @@ function renderMenu(data) {
   tableMenuBody.innerHTML = data.map(item => `
     <tr>
       <td>
-        <img src="${item.image}" alt="${item.name}" width="50" height="50" class="menu-img">
+        <img src="${normalizeAssetPath(item.image)}" alt="${item.name}" width="50" height="50" class="menu-img" onerror="this.onerror=null;this.src='./assets/images/menu-1.jpg';">
       </td>
       <td>
         <div class="cell-name">${item.name}</div>
       </td>
       <td style="text-transform: capitalize;">${item.category.replace("-", " ")}</td>
-      <td style="color: var(--gold-crayola); font-weight: bold;">$${Number(item.price).toFixed(2)}</td>
+      <td style="color: var(--gold-crayola); font-weight: bold;">${formatCurrency(item.price)}</td>
       <td>${item.badge ? `<span class="cell-badge">${item.badge}</span>` : '-'}</td>
       <td><small>${item.description}</small></td>
       <td>
@@ -496,12 +516,318 @@ setupSearch("search-newsletter", "newsletter", renderNewsletter);
 
 // Initialize Dashboard
 window.addEventListener("DOMContentLoaded", () => {
-  fetchReservations();
+  initAdminGuard();
 });
 
-// Bind function to window so HTML onclick event handlers work
+// Bind functions to window so HTML onclick event handlers work
 window.deleteReservation = deleteReservation;
 window.deleteMenuItem = deleteMenuItem;
 window.deleteContact = deleteContact;
 window.deleteSubscriber = deleteSubscriber;
 window.openEditMenuModal = openEditMenuModal;
+window.updateOrderStatus = updateOrderStatus;
+window.deleteOrder = deleteOrder;
+
+// ============================================================
+//  ADMIN AUTH GUARD
+// ============================================================
+
+function getAdminToken() {
+  return localStorage.getItem('feastflow_token');
+}
+
+function getAdminUser() {
+  try {
+    const u = localStorage.getItem('feastflow_user');
+    return u ? JSON.parse(u) : null;
+  } catch {
+    return null;
+  }
+}
+
+function initAdminGuard() {
+  const token = getAdminToken();
+  const user  = getAdminUser();
+
+  if (!token || !user || user.role !== 'admin') {
+    showAdminLoginModal();
+    return;
+  }
+
+  // Update the profile display with admin name
+  const usernameEl = document.querySelector('.admin-profile .username');
+  if (usernameEl && user.name) usernameEl.textContent = user.name;
+
+  // Load default tab
+  fetchReservations();
+}
+
+function showAdminLoginModal() {
+  // Blur / disable the main dashboard visually
+  const wrapper = document.querySelector('.admin-wrapper');
+  if (wrapper) wrapper.style.filter = 'blur(4px) brightness(0.4)';
+
+  const modal = document.getElementById('admin-login-modal');
+  if (modal) modal.classList.add('active');
+}
+
+function hideAdminLoginModal() {
+  const wrapper = document.querySelector('.admin-wrapper');
+  if (wrapper) wrapper.style.filter = '';
+
+  const modal = document.getElementById('admin-login-modal');
+  if (modal) modal.classList.remove('active');
+}
+
+// Wire admin login form
+const adminLoginForm = document.getElementById('admin-login-form');
+if (adminLoginForm) {
+  adminLoginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email    = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+
+    const submitBtn = adminLoginForm.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.classList.add('loading');
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        if (result.user.role !== 'admin') {
+          showToast('Access denied. Administrator account required.', 'error');
+          return;
+        }
+        localStorage.setItem('feastflow_token', result.token);
+        localStorage.setItem('feastflow_user', JSON.stringify(result.user));
+        showToast('Welcome back, ' + result.user.name + '!', 'success');
+        adminLoginForm.reset();
+        hideAdminLoginModal();
+
+        const usernameEl = document.querySelector('.admin-profile .username');
+        if (usernameEl) usernameEl.textContent = result.user.name;
+
+        fetchReservations();
+      } else {
+        showToast(result.error || 'Login failed.', 'error');
+      }
+    } catch (err) {
+      showToast('Server error. Please try again.', 'error');
+    } finally {
+      if (submitBtn) submitBtn.classList.remove('loading');
+    }
+  });
+}
+
+// ============================================================
+//  ORDERS TAB
+// ============================================================
+
+const tableOrdersBody = document.getElementById('table-orders-body');
+
+async function fetchOrders() {
+  const token = getAdminToken();
+  if (!token) { showAdminLoginModal(); return; }
+
+  if (tableOrdersBody) {
+    tableOrdersBody.innerHTML = '<tr><td colspan="8" class="text-center">Loading orders...</td></tr>';
+  }
+
+  try {
+    const response = await fetch('/api/orders/all', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      showAdminLoginModal();
+      return;
+    }
+
+    if (response.ok) {
+      const result = await response.json();
+      ordersData = result.data;
+      applyOrdersFilter();
+      renderOrdersMetrics(ordersData);
+    } else {
+      showToast('Failed to fetch orders.', 'error');
+    }
+  } catch (err) {
+    showToast('Error connecting to server.', 'error');
+  }
+}
+
+function renderOrdersMetrics(data) {
+  const total      = data.length;
+  const pending    = data.filter(o => o.status === 'pending').length;
+  const inProgress = data.filter(o => o.status === 'preparing' || o.status === 'out-for-delivery').length;
+  const revenue    = data
+    .filter(o => o.status !== 'cancelled')
+    .reduce((sum, o) => sum + o.totalPrice, 0);
+
+  const el = (id) => document.getElementById(id);
+  if (el('metric-total'))      el('metric-total').textContent      = total;
+  if (el('metric-pending'))    el('metric-pending').textContent    = pending;
+  if (el('metric-inprogress')) el('metric-inprogress').textContent = inProgress;
+  if (el('metric-revenue'))    el('metric-revenue').textContent    = formatCurrency(revenue);
+}
+
+function applyOrdersFilter() {
+  const searchInput = document.getElementById('search-orders');
+  const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+  let filtered = ordersData;
+
+  // Status filter
+  if (currentOrderFilter !== 'all') {
+    filtered = filtered.filter(o => o.status === currentOrderFilter);
+  }
+
+  // Text search
+  if (query) {
+    filtered = filtered.filter(o =>
+      (o.customerName  && o.customerName.toLowerCase().includes(query)) ||
+      (o.customerEmail && o.customerEmail.toLowerCase().includes(query)) ||
+      (o.deliveryAddress && o.deliveryAddress.toLowerCase().includes(query)) ||
+      (o.id && o.id.toLowerCase().includes(query))
+    );
+  }
+
+  ordersFilteredData = filtered;
+  renderOrders(filtered);
+}
+
+function renderOrders(data) {
+  if (!tableOrdersBody) return;
+
+  if (data.length === 0) {
+    tableOrdersBody.innerHTML = '<tr><td colspan="8" class="text-center">No orders found.</td></tr>';
+    return;
+  }
+
+  tableOrdersBody.innerHTML = data.map(order => {
+    const orderDate = new Date(order.createdAt).toLocaleString(undefined, {
+      month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    const itemsList = order.items.map(item =>
+      `<span>${item.name} ×${item.quantity}</span>`
+    ).join('');
+
+    const statusOptions = ['pending','preparing','out-for-delivery','completed','cancelled']
+      .map(s => `<option value="${s}" ${s === order.status ? 'selected' : ''}>${s.replace(/-/g,' ')}</option>`)
+      .join('');
+
+    return `
+      <tr>
+        <td><small style="color:var(--gold-crayola);font-weight:bold;">#${order.id.slice(0,8)}</small></td>
+        <td>
+          <div class="cell-name">${order.customerName}</div>
+          <small>${order.customerEmail}</small><br>
+          <small style="color:var(--quick-silver);">${order.deliveryAddress}</small>
+        </td>
+        <td>
+          <div class="order-items-mini">${itemsList}</div>
+        </td>
+        <td style="color:var(--gold-crayola);font-weight:bold;">${formatCurrency(order.totalPrice)}</td>
+        <td><small>${order.paymentMethod}</small></td>
+        <td><small>${orderDate}</small></td>
+        <td>
+          <select class="status-select" onchange="updateOrderStatus('${order.id}', this.value)">
+            ${statusOptions}
+          </select>
+        </td>
+        <td>
+          <div class="action-btns">
+            <button class="action-btn delete-btn" onclick="deleteOrder('${order.id}')" title="Delete Order">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function updateOrderStatus(id, status) {
+  const token = getAdminToken();
+  if (!token) { showAdminLoginModal(); return; }
+
+  try {
+    const response = await fetch(`/api/orders/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ status })
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      showToast(`Order status updated to "${status}".`, 'success');
+      // Update local data without full refetch for snappy UX
+      const order = ordersData.find(o => o.id === id);
+      if (order) order.status = status;
+      renderOrdersMetrics(ordersData);
+    } else {
+      showToast(result.error || 'Failed to update status.', 'error');
+      // Revert by re-rendering
+      applyOrdersFilter();
+    }
+  } catch (err) {
+    showToast('Error communicating with server.', 'error');
+    applyOrdersFilter();
+  }
+}
+
+async function deleteOrder(id) {
+  if (!confirm('Are you sure you want to delete this order? This cannot be undone.')) return;
+
+  const token = getAdminToken();
+  if (!token) { showAdminLoginModal(); return; }
+
+  try {
+    const response = await fetch(`/api/orders/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if (response.ok) {
+      showToast('Order deleted.', 'success');
+      ordersData = ordersData.filter(o => o.id !== id);
+      applyOrdersFilter();
+      renderOrdersMetrics(ordersData);
+    } else {
+      const result = await response.json();
+      showToast(result.error || 'Failed to delete order.', 'error');
+    }
+  } catch (err) {
+    showToast('Error communicating with server.', 'error');
+  }
+}
+
+// Wire filter pills
+const filterGroup = document.getElementById('orders-filter-group');
+if (filterGroup) {
+  filterGroup.addEventListener('click', (e) => {
+    const pill = e.target.closest('.filter-pill');
+    if (!pill) return;
+    filterGroup.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    currentOrderFilter = pill.dataset.filter;
+    applyOrdersFilter();
+  });
+}
+
+// Wire orders search
+const ordersSearch = document.getElementById('search-orders');
+if (ordersSearch) {
+  ordersSearch.addEventListener('input', applyOrdersFilter);
+}

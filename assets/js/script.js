@@ -1,5 +1,19 @@
 'use strict';
 
+const CURRENCY_FORMATTER = new Intl.NumberFormat("en-IN", {
+  style: "currency",
+  currency: "INR",
+  maximumFractionDigits: 0
+});
+
+const formatCurrency = (amount) => CURRENCY_FORMATTER.format(Number(amount) || 0);
+const normalizeAssetPath = (path) => {
+  if (!path) return "./assets/images/menu-1.jpg";
+  if (/^(https?:)?\/\//.test(path) || path.startsWith("data:")) return path;
+  if (path.startsWith("/")) return `.${path}`;
+  return path;
+};
+
 /**
  * PRELOAD
  */
@@ -549,6 +563,7 @@ const loadMenu = async () => {
         menuGrid.innerHTML = ""; // Clear static items
         
         menuItems.forEach((item, index) => {
+          const imagePath = normalizeAssetPath(item.image);
           const li = document.createElement("li");
           li.setAttribute("data-reveal", "fade-up");
           li.style.animationDelay = `${index * 50}ms`;
@@ -556,19 +571,23 @@ const loadMenu = async () => {
           li.innerHTML = `
             <div class="menu-card hover:card">
               <figure class="card-banner img-holder" style="--width: 100; --height: 100;">
-                <img src="${item.image}" width="100" height="100" loading="lazy" alt="${item.name}" class="img-cover">
+                <img src="${imagePath}" width="100" height="100" loading="lazy" alt="${item.name}" class="img-cover" onerror="this.onerror=null;this.src='./assets/images/menu-1.jpg';">
               </figure>
               <div>
                 <div class="title-wrapper">
                   <h3 class="title-3">
-                    <a href="#" class="card-title">${item.name}</a>
+                    <a href="#menu" class="card-title">${item.name}</a>
                   </h3>
                   ${item.badge ? `<span class="badge label-1">${item.badge}</span>` : ""}
-                  <span class="span title-2">$${Number(item.price).toFixed(2)}</span>
+                  <span class="span title-2">${formatCurrency(item.price)}</span>
                 </div>
-                <p class="card-text label-1">
+                <p class="card-text label-1" style="margin-bottom: 15px;">
                   ${item.description}
                 </p>
+                <button class="btn btn-secondary add-to-cart-btn" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}" data-image="${imagePath}" style="width: 100%; justify-content: center; padding: 6px 16px; margin-top: auto;">
+                  <span class="text text-1">Add to Cart</span>
+                  <span class="text text-2" aria-hidden="true">Add to Cart</span>
+                </button>
               </div>
             </div>
           `;
@@ -584,3 +603,641 @@ const loadMenu = async () => {
 };
 
 window.addEventListener("load", loadMenu);
+
+/**
+ * ---------------------------------------------
+ * E-COMMERCE & CLIENT AUTH MANAGEMENT SYSTEM
+ * ---------------------------------------------
+ */
+
+// Global Modals State Management
+const openAuthModal = () => {
+  const authModal = document.getElementById("auth-modal");
+  if (authModal) authModal.classList.add("active");
+  document.body.style.overflow = "hidden";
+};
+
+const closeAuthModal = () => {
+  const authModal = document.getElementById("auth-modal");
+  if (authModal) authModal.classList.remove("active");
+  document.body.style.overflow = "overlay";
+};
+
+const openCheckoutModal = () => {
+  const checkoutModal = document.getElementById("checkout-modal");
+  if (checkoutModal) {
+    checkoutModal.classList.add("active");
+    
+    // Update summary values
+    const itemsCount = getCartItemCount();
+    const orderTotal = getCartTotal();
+    document.getElementById("checkout-items-count").textContent = itemsCount;
+    document.getElementById("checkout-order-total").textContent = formatCurrency(orderTotal);
+  }
+  document.body.style.overflow = "hidden";
+};
+
+const closeCheckoutModal = () => {
+  const checkoutModal = document.getElementById("checkout-modal");
+  if (checkoutModal) checkoutModal.classList.remove("active");
+  document.body.style.overflow = "overlay";
+};
+
+const openOrdersModal = () => {
+  const ordersModal = document.getElementById("orders-modal");
+  if (ordersModal) {
+    ordersModal.classList.add("active");
+    loadOrderHistory();
+  }
+  document.body.style.overflow = "hidden";
+};
+
+const closeOrdersModal = () => {
+  const ordersModal = document.getElementById("orders-modal");
+  if (ordersModal) ordersModal.classList.remove("active");
+  document.body.style.overflow = "overlay";
+};
+
+const toggleCartDrawer = () => {
+  const drawer = document.getElementById("cart-drawer");
+  const overlay = document.getElementById("cart-drawer-overlay");
+  
+  if (drawer && overlay) {
+    drawer.classList.toggle("active");
+    overlay.classList.toggle("active");
+  }
+};
+
+const closeCartDrawer = () => {
+  const drawer = document.getElementById("cart-drawer");
+  const overlay = document.getElementById("cart-drawer-overlay");
+  
+  if (drawer && overlay) {
+    drawer.classList.remove("active");
+    overlay.classList.remove("active");
+  }
+};
+
+// Cart Data Layer
+const getCart = () => {
+  try {
+    const cart = localStorage.getItem("feastflow_cart");
+    return cart ? JSON.parse(cart) : [];
+  } catch {
+    return [];
+  }
+};
+
+const saveCart = (cart) => {
+  localStorage.setItem("feastflow_cart", JSON.stringify(cart));
+  updateCartUI();
+};
+
+const getCartItemCount = () => {
+  return getCart().reduce((sum, item) => sum + item.quantity, 0);
+};
+
+const getCartTotal = () => {
+  return getCart().reduce((sum, item) => sum + (item.price * item.quantity), 0);
+};
+
+const addToCart = (id, name, price, image) => {
+  const cart = getCart();
+  const existingItem = cart.find(item => item.id === id);
+
+  if (existingItem) {
+    existingItem.quantity += 1;
+  } else {
+    cart.push({
+      id,
+      name,
+      price: Number(price),
+      image,
+      quantity: 1
+    });
+  }
+
+  saveCart(cart);
+  showToast(`Added ${name} to cart!`, "success");
+};
+
+const updateCartQuantity = (id, amount) => {
+  let cart = getCart();
+  const item = cart.find(item => item.id === id);
+  if (!item) return;
+
+  item.quantity += amount;
+  if (item.quantity <= 0) {
+    cart = cart.filter(item => item.id !== id);
+  }
+
+  saveCart(cart);
+};
+
+const removeCartItem = (id) => {
+  let cart = getCart();
+  const item = cart.find(item => item.id === id);
+  const name = item ? item.name : "Item";
+  cart = cart.filter(item => item.id !== id);
+  saveCart(cart);
+  showToast(`Removed ${name} from cart.`, "info");
+};
+
+const clearCart = () => {
+  saveCart([]);
+};
+
+// Cart UI Synchronizer
+const updateCartUI = () => {
+  const cart = getCart();
+  
+  // Update badge count
+  const count = getCartItemCount();
+  const badge = document.getElementById("cart-badge");
+  if (badge) {
+    badge.textContent = count;
+  }
+
+  const drawerBody = document.getElementById("cart-drawer-body");
+  const drawerFooter = document.getElementById("cart-drawer-footer");
+  const subtotalText = document.getElementById("cart-subtotal");
+
+  if (!drawerBody) return;
+
+  if (cart.length === 0) {
+    drawerBody.innerHTML = `
+      <div class="cart-empty-message">
+        <ion-icon name="bag-handle-outline" style="font-size: 48px; color: var(--gold-color); margin-bottom: 15px;"></ion-icon>
+        <p class="body-3" style="color: var(--white-40); margin-bottom: 20px;">Your cart is empty.</p>
+        <a href="#menu" class="btn btn-secondary" id="cart-drawer-shop-btn">
+          <span class="text text-1">Order Food</span>
+          <span class="text text-2" aria-hidden="true">Order Food</span>
+        </a>
+      </div>
+    `;
+    if (drawerFooter) drawerFooter.style.display = "none";
+  } else {
+    drawerBody.innerHTML = "";
+    
+    cart.forEach(item => {
+      const itemEl = document.createElement("div");
+      itemEl.className = "cart-item";
+      itemEl.innerHTML = `
+        <img src="${normalizeAssetPath(item.image)}" alt="${item.name}" class="cart-item-img" onerror="this.onerror=null;this.src='./assets/images/menu-1.jpg';">
+        <div class="cart-item-details">
+          <h4 class="cart-item-name">${item.name}</h4>
+      <p class="cart-item-price">${formatCurrency(item.price)}</p>
+          <div class="cart-item-controls">
+            <button class="cart-qty-btn decrease-qty" data-id="${item.id}">-</button>
+            <span class="cart-item-qty">${item.quantity}</span>
+            <button class="cart-qty-btn increase-qty" data-id="${item.id}">+</button>
+          </div>
+        </div>
+        <button class="cart-item-remove" data-id="${item.id}" aria-label="Remove item">
+          <ion-icon name="trash-outline"></ion-icon>
+        </button>
+      `;
+      drawerBody.appendChild(itemEl);
+    });
+
+    if (drawerFooter) drawerFooter.style.display = "block";
+    if (subtotalText) {
+      subtotalText.textContent = formatCurrency(getCartTotal());
+    }
+
+    // Attach button listeners inside drawer
+    drawerBody.querySelectorAll(".decrease-qty").forEach(btn => {
+      btn.addEventListener("click", () => {
+        updateCartQuantity(btn.dataset.id, -1);
+      });
+    });
+
+    drawerBody.querySelectorAll(".increase-qty").forEach(btn => {
+      btn.addEventListener("click", () => {
+        updateCartQuantity(btn.dataset.id, 1);
+      });
+    });
+
+    drawerBody.querySelectorAll(".cart-item-remove").forEach(btn => {
+      btn.addEventListener("click", () => {
+        removeCartItem(btn.dataset.id);
+      });
+    });
+  }
+};
+
+// Client Authentication Manager
+const updateAuthUI = () => {
+  const authWrapper = document.getElementById("auth-wrapper");
+  if (!authWrapper) return;
+
+  const token = localStorage.getItem("feastflow_token");
+  const userStr = localStorage.getItem("feastflow_user");
+
+  if (token && userStr) {
+    try {
+      const user = JSON.parse(userStr);
+      authWrapper.innerHTML = `
+        <button class="user-profile-btn" id="user-profile-btn">
+          <ion-icon name="person-outline"></ion-icon>
+          <span>${user.name}</span>
+          <ion-icon name="chevron-down-outline"></ion-icon>
+        </button>
+        <div class="profile-dropdown" id="profile-dropdown">
+          ${user.role === 'admin' ? `
+            <a href="./admin.html" class="dropdown-item">
+              <ion-icon name="speedometer-outline"></ion-icon>
+              <span>Dashboard</span>
+            </a>
+          ` : ''}
+          <button class="dropdown-item" id="btn-order-history">
+            <ion-icon name="receipt-outline"></ion-icon>
+            <span>Order History</span>
+          </button>
+          <button class="dropdown-item" id="btn-logout" style="border-top: 1px solid var(--white-alpha-10);">
+            <ion-icon name="log-out-outline"></ion-icon>
+            <span>Logout</span>
+          </button>
+        </div>
+      `;
+
+      // Toggle dropdown menu
+      const profileBtn = document.getElementById("user-profile-btn");
+      const dropdown = document.getElementById("profile-dropdown");
+      
+      profileBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        profileBtn.classList.toggle("active");
+        dropdown.classList.toggle("active");
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener("click", () => {
+        if (profileBtn && dropdown) {
+          profileBtn.classList.remove("active");
+          dropdown.classList.remove("active");
+        }
+      });
+
+      // Logout handler
+      document.getElementById("btn-logout").addEventListener("click", () => {
+        localStorage.removeItem("feastflow_token");
+        localStorage.removeItem("feastflow_user");
+        showToast("Logged out successfully.", "info");
+        updateAuthUI();
+      });
+
+      // Order History handler
+      document.getElementById("btn-order-history").addEventListener("click", () => {
+        openOrdersModal();
+      });
+
+    } catch (err) {
+      console.error("Failed to parse user details:", err);
+      renderLoggedOutUI();
+    }
+  } else {
+    renderLoggedOutUI();
+  }
+};
+
+const renderLoggedOutUI = () => {
+  const authWrapper = document.getElementById("auth-wrapper");
+  if (!authWrapper) return;
+  
+  authWrapper.innerHTML = `
+    <button class="btn btn-primary" id="btn-signin">
+      <span class="text text-1">Sign In</span>
+      <span class="text text-2" aria-hidden="true">Sign In</span>
+    </button>
+  `;
+  
+  // Wire sign in button to modal
+  document.getElementById("btn-signin").addEventListener("click", () => {
+    openAuthModal();
+  });
+};
+
+// Customer Order History Loader
+const loadOrderHistory = async () => {
+  const ordersBody = document.getElementById("orders-modal-body");
+  if (!ordersBody) return;
+
+  const token = localStorage.getItem("feastflow_token");
+  if (!token) {
+    ordersBody.innerHTML = `<p class="text-center" style="color: var(--white-40); padding: 20px;">Please sign in to view your orders.</p>`;
+    return;
+  }
+
+  ordersBody.innerHTML = `<p class="text-center" style="color: var(--white-40); padding: 20px;">Loading your orders...</p>`;
+
+  try {
+    const response = await fetch("/api/orders", {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      const orders = result.data;
+      
+      if (orders.length === 0) {
+        ordersBody.innerHTML = `<p class="text-center" style="color: var(--white-40); padding: 20px;">You have not placed any orders yet.</p>`;
+      } else {
+        ordersBody.innerHTML = "";
+        
+        orders.forEach(order => {
+          const formattedDate = new Date(order.createdAt).toLocaleString(undefined, {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+          });
+          
+          const itemsListHtml = order.items.map(item => `
+            <div class="order-item-row">
+              <span>${item.name} x ${item.quantity}</span>
+              <span>${formatCurrency(item.price * item.quantity)}</span>
+            </div>
+          `).join('');
+
+          const orderCard = document.createElement("div");
+          orderCard.className = "order-history-card";
+          orderCard.innerHTML = `
+            <div class="order-history-header">
+              <span class="order-id">ID: #${order.id.slice(0, 8)}</span>
+              <span class="order-status status-${order.status}">${order.status}</span>
+            </div>
+            <div class="order-items-container">
+              ${itemsListHtml}
+            </div>
+            <div class="order-history-footer">
+              <span style="color: var(--white-40); font-size: 1.2rem;">${formattedDate}</span>
+              <span class="title-3" style="color: var(--gold-color);">${formatCurrency(order.totalPrice)}</span>
+            </div>
+            ${order.notes ? `
+              <div style="margin-top: 10px; padding-top: 8px; border-top: 1px dotted var(--white-alpha-10); font-size: 1.2rem; color: var(--white-40);">
+                <strong>Instructions:</strong> ${order.notes}
+              </div>
+            ` : ''}
+          `;
+          
+          ordersBody.appendChild(orderCard);
+        });
+      }
+    } else {
+      ordersBody.innerHTML = `<p class="text-center" style="color: var(--white-40); padding: 20px;">Failed to load order history: ${result.error || 'unknown error'}</p>`;
+    }
+  } catch (err) {
+    ordersBody.innerHTML = `<p class="text-center" style="color: var(--white-40); padding: 20px;">Server error while loading orders.</p>`;
+  }
+};
+
+// Initializer Event Subscriptions
+const initAuthAndCart = () => {
+  // Toggle forms inside login modal
+  const toSignupBtn = document.getElementById("switch-to-signup");
+  const toLoginBtn = document.getElementById("switch-to-login");
+  const loginForm = document.getElementById("login-form");
+  const registerForm = document.getElementById("register-form");
+  const authTitle = document.getElementById("auth-modal-title");
+
+  if (toSignupBtn && toLoginBtn && loginForm && registerForm) {
+    toSignupBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      loginForm.style.display = "none";
+      registerForm.style.display = "block";
+      if (authTitle) authTitle.textContent = "Sign Up";
+    });
+
+    toLoginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      registerForm.style.display = "none";
+      loginForm.style.display = "block";
+      if (authTitle) authTitle.textContent = "Sign In";
+    });
+  }
+
+  // Close modals
+  const authClose = document.getElementById("auth-modal-close");
+  if (authClose) {
+    authClose.addEventListener("click", closeAuthModal);
+  }
+  
+  const checkoutClose = document.getElementById("checkout-modal-close");
+  if (checkoutClose) {
+    checkoutClose.addEventListener("click", closeCheckoutModal);
+  }
+
+  const ordersClose = document.getElementById("orders-modal-close");
+  if (ordersClose) {
+    ordersClose.addEventListener("click", closeOrdersModal);
+  }
+
+  // Cart Drawer Toggles
+  const cartToggle = document.getElementById("cart-toggle-btn");
+  if (cartToggle) {
+    cartToggle.addEventListener("click", toggleCartDrawer);
+  }
+
+  const cartClose = document.getElementById("cart-drawer-close");
+  if (cartClose) {
+    cartClose.addEventListener("click", closeCartDrawer);
+  }
+
+  const cartOverlay = document.getElementById("cart-drawer-overlay");
+  if (cartOverlay) {
+    cartOverlay.addEventListener("click", closeCartDrawer);
+  }
+
+  // Close modal on escape key
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeAuthModal();
+      closeCheckoutModal();
+      closeOrdersModal();
+    }
+  });
+
+  // Login form submit
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+
+      const submitBtn = loginForm.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.classList.add("loading");
+
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem("feastflow_token", result.token);
+          localStorage.setItem("feastflow_user", JSON.stringify(result.user));
+          showToast("Signed in successfully!", "success");
+          loginForm.reset();
+          closeAuthModal();
+          updateAuthUI();
+        } else {
+          showToast(result.error || "Authentication failed.", "error");
+        }
+      } catch (err) {
+        showToast("Server error. Please check your connection.", "error");
+      } finally {
+        if (submitBtn) submitBtn.classList.remove("loading");
+      }
+    });
+  }
+
+  // Register form submit
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("register-name").value;
+      const email = document.getElementById("register-email").value;
+      const password = document.getElementById("register-password").value;
+
+      const submitBtn = registerForm.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.classList.add("loading");
+
+      try {
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem("feastflow_token", result.token);
+          localStorage.setItem("feastflow_user", JSON.stringify(result.user));
+          showToast("Account created successfully!", "success");
+          registerForm.reset();
+          closeAuthModal();
+          updateAuthUI();
+        } else {
+          showToast(result.error || "Registration failed.", "error");
+        }
+      } catch (err) {
+        showToast("Server error. Please check your connection.", "error");
+      } finally {
+        if (submitBtn) submitBtn.classList.remove("loading");
+      }
+    });
+  }
+
+  // Add to cart delegation on Menu Card Grid
+  if (menuGrid) {
+    menuGrid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".add-to-cart-btn");
+      if (btn) {
+        e.preventDefault();
+        const id = btn.dataset.id;
+        const name = btn.dataset.name;
+        const price = btn.dataset.price;
+        const image = btn.dataset.image;
+        addToCart(id, name, price, image);
+      }
+    });
+  }
+
+  // Checkout modal trigger from drawer
+  const checkoutBtn = document.getElementById("btn-cart-checkout");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", () => {
+      const token = localStorage.getItem("feastflow_token");
+      if (!token) {
+        closeCartDrawer();
+        openAuthModal();
+        showToast("Please sign in or create an account to proceed to checkout.", "info");
+        return;
+      }
+      closeCartDrawer();
+      openCheckoutModal();
+    });
+  }
+
+  // Checkout form submit
+  const checkoutForm = document.getElementById("checkout-form");
+  if (checkoutForm) {
+    checkoutForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const phone = document.getElementById("checkout-phone").value;
+      const address = document.getElementById("checkout-address").value;
+      const notes = document.getElementById("checkout-notes").value;
+      const paymentMethod = document.getElementById("checkout-payment").value;
+      
+      const token = localStorage.getItem("feastflow_token");
+      if (!token) {
+        closeCheckoutModal();
+        openAuthModal();
+        showToast("Session expired. Please sign in.", "error");
+        return;
+      }
+
+      const cart = getCart();
+      if (cart.length === 0) {
+        showToast("Your cart is empty.", "error");
+        return;
+      }
+
+      const submitBtn = checkoutForm.querySelector("button[type='submit']");
+      if (submitBtn) submitBtn.classList.add("loading");
+
+      // Format items payload for API
+      const formattedItems = cart.map(item => ({
+        productId: item.id,
+        name: item.name,
+        price: Number(item.price),
+        quantity: Number(item.quantity)
+      }));
+
+      try {
+        const response = await fetch("/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            phone,
+            address,
+            notes,
+            paymentMethod,
+            items: formattedItems
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showToast("Order placed successfully! Thank you.", "success");
+          checkoutForm.reset();
+          clearCart();
+          closeCheckoutModal();
+        } else {
+          showToast(result.error || "Failed to place order.", "error");
+        }
+      } catch (err) {
+        showToast("Server error. Failed to place order.", "error");
+      } finally {
+        if (submitBtn) submitBtn.classList.remove("loading");
+      }
+    });
+  }
+};
+
+// Start system modules
+window.addEventListener("DOMContentLoaded", () => {
+  updateAuthUI();
+  updateCartUI();
+  initAuthAndCart();
+});

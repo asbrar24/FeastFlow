@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FeastFlow - Admin Dashboard</title>
+  <title>Feast Flow - Admin Dashboard</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,8 +26,8 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
-        <a href="/" class="logo">
-          <img src="./assets/images/logo.svg" width="140" height="44" alt="FeastFlow Logo">
+        <a href="./index.html" class="logo">
+          <img src="./assets/images/logo.svg" width="140" height="44" alt="Feast Flow Logo">
         </a>
         <span class="badge">Admin</span>
       </div>
@@ -36,6 +36,10 @@
         <button class="nav-item active" data-tab="reservations">
           <ion-icon name="calendar-outline"></ion-icon>
           <span>Reservations</span>
+        </button>
+        <button class="nav-item" data-tab="orders">
+          <ion-icon name="receipt-outline"></ion-icon>
+          <span>Orders</span>
         </button>
         <button class="nav-item" data-tab="menu">
           <ion-icon name="restaurant-outline"></ion-icon>
@@ -196,8 +200,111 @@
           </div>
         </section>
 
+        <!-- Tab: Orders Management -->
+        <section class="tab-view" id="view-orders">
+
+          <!-- Dashboard Metrics -->
+          <div class="orders-metrics-grid" id="orders-metrics-grid">
+            <div class="metric-card glass-card">
+              <div class="metric-icon"><ion-icon name="receipt-outline"></ion-icon></div>
+              <div class="metric-info">
+                <span class="metric-label label-1">Total Orders</span>
+                <strong class="metric-value title-1" id="metric-total">0</strong>
+              </div>
+            </div>
+            <div class="metric-card glass-card">
+              <div class="metric-icon pending-icon"><ion-icon name="time-outline"></ion-icon></div>
+              <div class="metric-info">
+                <span class="metric-label label-1">Pending</span>
+                <strong class="metric-value title-1" id="metric-pending">0</strong>
+              </div>
+            </div>
+            <div class="metric-card glass-card">
+              <div class="metric-icon preparing-icon"><ion-icon name="flame-outline"></ion-icon></div>
+              <div class="metric-info">
+                <span class="metric-label label-1">In Progress</span>
+                <strong class="metric-value title-1" id="metric-inprogress">0</strong>
+              </div>
+            </div>
+            <div class="metric-card glass-card">
+              <div class="metric-icon revenue-icon"><ion-icon name="cash-outline"></ion-icon></div>
+              <div class="metric-info">
+                <span class="metric-label label-1">Total Revenue</span>
+                <strong class="metric-value title-1" id="metric-revenue">₹0</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter & Search Bar -->
+          <div class="view-header">
+            <div class="search-wrapper">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Search by customer, address..." id="search-orders" class="search-input">
+            </div>
+            <div class="orders-filter-group" id="orders-filter-group">
+              <button class="filter-pill active" data-filter="all">All</button>
+              <button class="filter-pill" data-filter="pending">Pending</button>
+              <button class="filter-pill" data-filter="preparing">Preparing</button>
+              <button class="filter-pill" data-filter="out-for-delivery">Out for Delivery</button>
+              <button class="filter-pill" data-filter="completed">Completed</button>
+              <button class="filter-pill" data-filter="cancelled">Cancelled</button>
+            </div>
+          </div>
+
+          <!-- Orders Table -->
+          <div class="table-container glass-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th>Payment</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-orders-body">
+                <tr>
+                  <td colspan="8" class="text-center">Loading orders...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
       </div>
     </main>
+  </div>
+
+  <!-- Admin Login Guard Modal -->
+  <div class="modal" id="admin-login-modal">
+    <div class="modal-content glass-card" style="max-width: 420px;">
+      <header class="modal-header">
+        <h2 class="title-3" style="color: var(--gold-crayola);">Admin Access Required</h2>
+      </header>
+      <form id="admin-login-form" class="modal-body">
+        <p class="label-1" style="color: var(--quick-silver); margin-bottom: 10px;">Please sign in with your administrator credentials to access this dashboard.</p>
+        <div class="form-group">
+          <label for="admin-email">Email</label>
+          <input type="email" id="admin-email" class="input-field" placeholder="admin@feastflow.com" required>
+        </div>
+        <div class="form-group">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" class="input-field" placeholder="••••••" required>
+        </div>
+        <button type="submit" class="btn btn-secondary modal-submit-btn">
+          <span class="text text-1">Sign In as Admin</span>
+          <span class="text text-2" aria-hidden="true">Sign In as Admin</span>
+        </button>
+        <a href="./index.html" class="back-link" style="justify-content: center; margin-top: 12px;">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+          <span>Return to site</span>
+        </a>
+      </form>
+    </div>
   </div>
 
   <!-- Menu Item Modal (Add / Edit) -->
@@ -213,7 +320,7 @@
         <input type="hidden" id="menu-item-id">
         <div class="form-group">
           <label for="menu-name">Item Name*</label>
-          <input type="text" id="menu-name" class="input-field" placeholder="Greek Salad" required>
+          <input type="text" id="menu-name" class="input-field" placeholder="Paneer Tikka" required>
         </div>
         <div class="form-group">
           <label for="menu-category">Category*</label>
@@ -226,8 +333,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="menu-price">Price ($)*</label>
-          <input type="number" id="menu-price" step="0.01" class="input-field" placeholder="19.99" required>
+          <label for="menu-price">Price (₹)*</label>
+          <input type="number" id="menu-price" step="1" class="input-field" placeholder="260" required>
         </div>
         <div class="form-group">
           <label for="menu-badge">Badge (Optional)</label>
@@ -235,7 +342,7 @@
         </div>
         <div class="form-group">
           <label for="menu-image">Image URL</label>
-          <input type="text" id="menu-image" class="input-field" placeholder="./assets/images/menu-1.png">
+          <input type="text" id="menu-image" class="input-field" placeholder="./assets/images/menu-1.jpg">
         </div>
         <div class="form-group">
           <label for="menu-description">Description</label>

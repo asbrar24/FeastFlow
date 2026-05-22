@@ -1,55 +1,55 @@
 [
   {
     "id": "menu-001",
-    "name": "Greek Salad",
-    "description": "Tomatoes, green bell pepper, sliced cucumber onion, olives, and feta cheese.",
-    "price": 25.5,
-    "image": "./assets/images/menu-1.png",
+    "name": "Paneer Tikka",
+    "description": "Char-grilled paneer with peppers, onions, mint chutney, and Feast Flow masala.",
+    "price": 260,
+    "image": "./assets/images/menu-1.jpg",
     "category": "appetizers",
     "badge": "Seasonal"
   },
   {
     "id": "menu-002",
-    "name": "Lasagne",
-    "description": "Vegetables, cheeses, ground meats, tomato sauce, seasonings and spices.",
-    "price": 40,
-    "image": "./assets/images/menu-2.png",
+    "name": "Butter Chicken",
+    "description": "Tandoor-roasted chicken simmered in a rich tomato, butter, and kasuri methi gravy.",
+    "price": 420,
+    "image": "./assets/images/menu-2.jpg",
     "category": "main-course",
     "badge": null
   },
   {
     "id": "menu-003",
-    "name": "Butternut Pumpkin",
-    "description": "Roasted butternut pumpkin with herbs, garlic butter, and a hint of nutmeg.",
-    "price": 10,
-    "image": "./assets/images/menu-3.png",
+    "name": "Dal Makhani",
+    "description": "Slow-cooked black lentils finished with butter, cream, and roasted spices.",
+    "price": 280,
+    "image": "./assets/images/menu-3.jpg",
     "category": "appetizers",
     "badge": null
   },
   {
     "id": "menu-004",
-    "name": "Tokusen Wagyu",
-    "description": "Premium wagyu beef, seared to perfection with truffle butter and seasonal vegetables.",
-    "price": 39,
-    "image": "./assets/images/menu-4.png",
+    "name": "Hyderabadi Biryani",
+    "description": "Fragrant basmati rice layered with saffron, herbs, spices, and tender dum-cooked chicken.",
+    "price": 360,
+    "image": "./assets/images/menu-4.jpg",
     "category": "main-course",
     "badge": "New"
   },
   {
     "id": "menu-005",
-    "name": "Olivas Rellenas",
-    "description": "Avocados with crab meat, red onion, crab salad stuffed red bell pepper and green bell pepper.",
-    "price": 25,
-    "image": "./assets/images/menu-5.png",
+    "name": "Shami Kebab",
+    "description": "Tender spiced kebabs with herbs, garam masala, onion rings, and mint chutney.",
+    "price": 280,
+    "image": "./assets/images/menu-5.jpg",
     "category": "appetizers",
-    "badge": null
+    "badge": "Best Seller"
   },
   {
     "id": "menu-006",
-    "name": "Opu Fish",
-    "description": "Fresh catch of the day, pan-seared with lemon caper sauce and garden herbs.",
-    "price": 49,
-    "image": "./assets/images/menu-6.png",
+    "name": "Goan Fish Curry",
+    "description": "Coastal fish curry with coconut, kokum, curry leaves, and steamed rice.",
+    "price": 450,
+    "image": "./assets/images/menu-6.jpg",
     "category": "seafood",
     "badge": null
   }

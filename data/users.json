@@ -1,0 +1,34 @@
+[
+  {
+    "id": "f4a400bd-e4e6-4ab3-bf2c-abac420e375d",
+    "name": "Manager",
+    "email": "admin@feastflow.com",
+    "password": "$2a$10$tuQmCHncYGXcoyrh8FL4m.t5e1quOGHeS4qZ4VrCkkI5T2ssACR.6",
+    "role": "admin",
+    "createdAt": "2026-05-22T11:50:41.506Z"
+  },
+  {
+    "id": "1d3d09f8-fad0-4be8-8087-a3dc2040bd0a",
+    "name": "Aeron",
+    "email": "aeronbir@gmail.com",
+    "password": "$2a$10$gdhiI4ATfX5cStW8AHFmA.hp6ZE6dX.FozdiHSTG7hIZDqRSuvoUG",
+    "role": "customer",
+    "createdAt": "2026-05-22T12:25:25.280Z"
+  },
+  {
+    "id": "1dda4e34-86ed-4b6d-8fc5-6224487a8398",
+    "name": "divyam",
+    "email": "divyam123@gmail.com",
+    "password": "$2a$10$myMWCx2KB.Sr9L5FuBsTr.i1vGPIull2AgkdLOHes4FF73X5K1eS.",
+    "role": "customer",
+    "createdAt": "2026-05-22T12:28:44.397Z"
+  },
+  {
+    "id": "96b33222-04c1-46d3-b6c2-46f241dac301",
+    "name": "sanat",
+    "email": "sanat@gmail.com",
+    "password": "$2a$10$tCJZW/c2efYcmFZ2llwNxu7HEjbbe95TzCs6aGAXpLijzraVlIQrK",
+    "role": "customer",
+    "createdAt": "2026-05-22T13:01:15.285Z"
+  }
+]

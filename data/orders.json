@@ -1,0 +1,56 @@
+[
+  {
+    "id": "542c9c0b-54c6-4e99-8011-b74536fea09f",
+    "userId": "1d3d09f8-fad0-4be8-8087-a3dc2040bd0a",
+    "customerName": "Aeron",
+    "customerEmail": "aeronbir@gmail.com",
+    "customerPhone": "9999999999",
+    "deliveryAddress": "lorem ipsum",
+    "items": [
+      {
+        "productId": "menu-001",
+        "name": "Paneer Tikka",
+        "price": 260,
+        "quantity": 1
+      },
+      {
+        "productId": "menu-004",
+        "name": "Hyderabadi Biryani",
+        "price": 360,
+        "quantity": 2
+      }
+    ],
+    "totalPrice": 980,
+    "paymentMethod": "Cash on Delivery",
+    "notes": "less spicy",
+    "status": "pending",
+    "createdAt": "2026-05-22T12:26:20.715Z"
+  },
+  {
+    "id": "340a5917-e6b5-4ec9-9ae7-f8e716c5a13d",
+    "userId": "96b33222-04c1-46d3-b6c2-46f241dac301",
+    "customerName": "sanat",
+    "customerEmail": "sanat@gmail.com",
+    "customerPhone": "999999999",
+    "deliveryAddress": "123456",
+    "items": [
+      {
+        "productId": "menu-002",
+        "name": "Butter Chicken",
+        "price": 420,
+        "quantity": 1
+      },
+      {
+        "productId": "menu-001",
+        "name": "Paneer Tikka",
+        "price": 260,
+        "quantity": 1
+      }
+    ],
+    "totalPrice": 680,
+    "paymentMethod": "Cash on Delivery",
+    "notes": "",
+    "status": "out-for-delivery",
+    "createdAt": "2026-05-22T13:03:34.884Z"
+  }
+]
