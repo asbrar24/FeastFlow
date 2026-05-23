@@ -3272,6 +3272,18 @@ textarea.input-field {
   display: inline;
 }
 
+#checkout-modal .modal-content {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#checkout-modal .modal-body {
+  overflow-y: auto;
+  max-height: calc(90vh - 80px);
+}
+
 /* Orders List inside Modal */
 .order-history-card {
   background: var(--smoky-black-2);

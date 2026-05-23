@@ -609,6 +609,19 @@ body {
   gap: 12px;
 }
 
+/* Menu Item Modal – scrollable */
+#menu-modal .modal-content {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#menu-modal .modal-body {
+  overflow-y: auto;
+  max-height: calc(90vh - 80px);
+}
+
 /* Responsive: Orders Grid */
 @media (max-width: 1200px) {
   .orders-metrics-grid {
